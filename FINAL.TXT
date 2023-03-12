@@ -1,0 +1,72 @@
+1. (5 points) What are the different types of dynamic RAM 
+refresh?  Explain each.
+
+2.  (10 points) Modify the 8203 interface design in Figure 5.35 
+so that it will interface with the basic system project.  Design 
+it with 32K Bytes (two banks of 2118 (16K x 1 bit)) dynamic 
+memory addressed from 0x8000 to 0xFFFF.  Also use the advanced 
+read mode of the 8203.
+
+3. (5 points) Describe how a pseudostatic RAM (integrated RAM) 
+functions?
+
+4. (5 points) What is the early-write mode of the 2164? Explain 
+with a timing diagram.  Why is it important?
+
+5. (5 points) What are the six activities that all Interrupt 
+Service Routines (ISRs) must include?   Briefly describe each. 
+
+6. (10 points) Modify the 8259 interface design in Figure 7.29 so 
+that it will interface with the basic system project.  Memory-map 
+the 8259 at address 7000H.   Write the initialzation routine to 
+program the 8259 to use interface eight level-triggered interrupt 
+inputs.  The following jump table will be used to service the 
+interrupts.
+   Interrupt - Address - Opcode
+     IR0        1700     JMP ISR0  ; Interrupt Service Routine    
+     IR1        1704     JMP ISR1
+     IR2 - 1708  JMP ISR2
+     IR3 - 170C  JMP ISR3
+     IR4 - 1710  JMP ISR4
+     IR5 - 1714  JMP ISR5
+     IR6 - 1718  JMP ISR6
+     IR7 - 171C  JMP ISR7
+
+7. (5 points) Briefly describe the DMA data transfer concept.  
+Also, describe the different DMA transfer modes.
+
+8. (10 points) Modify the 8237 interface design in Figure 7.38 so 
+that it will interface with the basic system project.  I/O-map 
+the 8237 at 16 consecutive I/O ports starting at port address 
+10H.  Indicate any additional logic & buffering that would be 
+necessary to connect the 8237 to the 8085 basic system.  
+
+9. (10 points) What are the most common tools for locating 
+microprocessor faults.  Describe briefly how each tool is used to 
+locate faults.
+
+10. (10 points)  Write a 8088 program that will add the 8 BCD 
+digit number stored at 0700H through 0703H from the 8 BCD digit 
+number stored at 0704H through 0707H.  Store the difference at 
+0700H through 0703H.
+
+11. (15 points) Design a completely buffered minimum mode 8088 
+CPU module, using standard buffering devices 74LS373(s), 
+74LS244(s), and 74LS245(s).  Provide separate buufered control 
+lines for memory read, memory write, I/O read, I/O write.  
+(Simular to Figure 12.7 for the 8086).
+
+12. (10 points) Design a 1 Megabyte address space memory map for 
+a 8088 processor so that there is:
+     1.   64K byte read only memory segment of 32K byte (27256) 
+EPROMs used for the monitor program and BIOS (Basic Input Output 
+System).
+     2.   64K byte static memory segment of 32K byte (62256) 
+SRAMs used for the Interrupt Vectors and BIOS data and buffers.
+     3.   320K reserved segment starting at address 0xA0000 for 
+memory mapped IO devices, for example video memory.
+     4.   dynamic memory segment for the rest of the address 
+space. Determine how much dynamic memory will be available.  
+
+
+  

@@ -1,0 +1,354 @@
+            ECE 511 - Introduction to Microprocessors
+                         Course Syllabus
+                       Spring 1991 SEMESTER
+
+Instructor:   David duBose
+Home Phone:   (703) 450-4005
+Office:       ST-6 
+Office Hour:  Monday 6:20 -  7:20 pm
+Meeting Time: Monday 7:20 - 10:00 pm
+
+Course Objective:  To develop the ability to specify, design, and 
+implement hardware and software for microprocessor based 
+applications.  
+
+Catalog Description: Introduction to microprocessor architecture 
+and structure. Intel 8085 architecture and programming.  
+Microcomputer bus structure.  Microcomputer memory.  
+Microcomputer I/O, interrupts, DMA, and interfacing.  
+Microcomputer development systems.  Application examples.  
+Introduction to 16-bit microprocessors (Intel 8088/8086).  
+Includes a project involving hands-on experience with 
+microcomputer systems.
+
+Prerequisites: ECE 445 - Computer Organization
+               ECE 331 - Digital Electronics
+               ECE 332 - Digital Electronics Laboratory
+
+Textbooks:     Microcomputers and Microprocessors
+               John Uffenbeck 
+               Prentice-Hall, 1985
+               Englewood Cliffs, NJ 
+               ISBN 0-13-580309-8
+
+               MCS-80/85 Family User's Manual
+               Intel Corporation, 1987
+               Santa Clara, CA
+               ISBN 1-55512-009-1
+
+Outline:  Topic
+     1.   Introduction & Microcomputer Overview
+     2.   8085 Architecture, Basic System & Timing
+     3.   Static Memory, EPROM Devices & Address Decoding      
+     4.   Assembley Language & 8085 Instruction Set   
+     5.   AL Programming Examples & Exercise
+     6.   Basic Serial & Parallel IO support devices
+     7.   Interrupts & DMA support devices 
+     8.   Mid-Term Exam & Basic System Demonstration
+     9.   Other Support Chips & Microcomputer Applications
+    10.   Bus buffering & Dynamic Memory interfacing      
+    11.   Debugging techniques and develop tools
+    11.   MicroControllers
+    12.   8088/86 Architecture, Basic System & Timing
+    13.   8088/86 Instruction Set & Interrupts
+    14.   Final Exam & Project Demonstration
+
+Grading Criteria:
+
+    15%   Midterm Exam, 2 hour (week 8)
+    10%   Basic System Report & Demonstration (week 8)
+     5%   Interface Project Proposal (week 9)
+    15%   Interface Project Report (week 14)
+    20%   Interface Project Demontration (week 14)
+    15%   Final Exam, 2 hours  (week 14)
+
+     o    Makeup exams are rarely given.  Late submissions of 
+          projects and reports will affect your grade.
+
+     o    Reports will be typed, checked of spelling and grammer. 
+          Schematic drawings can be hand drawn, but you must use 
+          an electronics template and be neat in labeling.
+
+     o    You may get assistance with designing your project, but 
+          you will write your own software,  build your own 
+          hardware, and write your own report.  You may also get 
+          assistance in debugging your system.
+
+Parts Listing:
+
+     1 - Intel 8085 Microprocessor *     
+     1 - 4.9152MHz Crystal
+     1 - 74LS373 Octal Transparent Latch
+     1 - 2732  4K byte EPROM (single 5V, 21V programming) *
+     1 - 6116  2K byte Static RAM  *      
+     1 - 74LS138 Decoder 1 out of 8        
+     1 - MC1488 or 75188    RS-232C Line Driver
+     1 - MC1489 or 75189    RS-232C Line Reciever  
+     1 - 40 pin Wire Wrap Socket         
+     2 - 24 pin Wire Wrap Socket       
+     1 - 20 pin Wire Wrap Socket 
+     1 - 16 pin Wire Wrap Socket                          
+     2 - 14 pin Wire Wrap Socket
+     1 - SPST Momentary normally open Switch
+     1 - 100' roll #30 Wire Wrap Wire 
+     1 - Wire Wrap Tool                   
+     1 - PC Board                  
+     1 - DB-25 Connector       
+     1 - 5" Long Nose Pliers              
+
+*  NOTE These are Static Sensitive Devices
+*  Additional parts will be necessary for the advance project
+
+
+Basic System Phase
+ 
+This basic system is the first phase of a two phased project. The 
+purpose of this phase is to develop the foundation for the more 
+advanced interface project in the next phase.  In this phase the 
+student will specify, design, build and test a very small 
+functioning unit.
+
+The basic system shall provide the following capabilities:
+     o    the processing capability of an Intel 8085 micro-
+          processor with a 1-3MHz system clock.  
+     o    to power-on and manually reset the system.
+     o    to manually interrupt the system processing of the 
+          Intel 8085. 
+     o    at least a 4K EPROM memory with basic tty monitor 
+          program installed.
+     o    at least a 2K Static RAM memory for system stack and 
+          application memory. 
+     o    a RS-232 buffering on the SID and SOD lines of                     
+          the Intel 8085 so that it can communicate with an IBM-
+          PC.
+     o    address decoding for the following memory map:
+          (   0 - 0FFF) - 4K EPROM
+          (1000 - 17FF) - 2K Static RAM
+          (2000 - 2FFF) - open 
+          (3000 - 3FFF) - open
+          (4000 - 4FFF) - open
+          (5000 - 5FFF) - open
+          (6000 - 6FFF) - open
+          (7000 - 7FFF) - open
+          (8000 - FFFF) - not available
+
+The monitor program will be provided and student will copy it 
+onto the EPROM supplied with the laboratory kit. If the student 
+designs and builds the project with the above specifications the 
+monitor program will function properly. The grading criteria of 
+phase I will be to demonstate that the monitor program is 
+functioning correctly.  
+
+The Basic System report will describe a detail design of the 
+hardware and describe the students understanding of how the 
+monitor program functions (NOT HOW TO USE IT).  This description 
+shall include a discussion of how the software UART works. The 
+software UART consists of the Console Input, Console Output and 
+AutoBaud rate detect routines.
+
+
+Application System Phase
+
+The application system is the last phase of the two phased 
+project. The purpose of this phase is to interface an application 
+to the basic system that was developed in the previous phase.  In 
+this phase the student will specify, design, build and test a 
+microcomputer application.   
+
+One of the following interfaces can be added to the basic system 
+to provide an application. Consult with the instructor or the 
+teaching assistant to get a description of any of the 
+applications.  The student must get approval to develop any 
+application that is not listed below: 
+
+     CRT Interface - 8275 or 8276 Controller
+     64K Dynamic Memory Interface - 8203 Controller  
+     Unencoded Keyboard Interface - 8279 Controller
+     Data Encryption Interface - 8294A Controller
+     Arithmetic Processing Interface - 8231A Controller
+     IBM Keyboard Interface  
+     Syncronous Serial Interface - 8274 Controller 
+     Motor Control Interface
+     4 Digit - Temperature Sensor
+     4 Digit - Light Level Sensor
+     Power Control (8 - 250 watts) Interface
+     Ultrasonic Distance Sensor
+     Wind Speed Sensor Interface
+     EPROM Programmer
+     PROM/PAL Programmer
+     Bar-Code Reader Interface
+     Real Time Clock Interface (using DP8570A or equivalent)
+     Voice Synthesizer Interface
+     Radio Control Remote Interface
+     Vertical/Horizontal Position Interface
+     8 Digit- 7 Segment Multiplexed Display & Calculator Keyboard
+     Music Synthesizer Interface
+     Printer Buffer Interface (Serial-8251 to Parallel-8255) 
+     Telephone Touch Tone Dialer
+     Telephone Touch Tone Decoder
+     4 Digit Display - 8 Channel Volt Meter
+     Programmable Function Generator
+     4 Digit Display - Frequency Meter
+     4 Digit Display - Capacitor Meter
+
+The student will provide a project proposal that clearly states 
+the specifications of the application.  This proposal will 
+identify testable requirements that will be used to verify the 
+functionality of the project during the demonstration.  The 
+student will provide a project report that completely documents 
+the application system.  This report will include a functional 
+discription, a concept of operation, and a detail design section. 
+The student will demonstrate the system to verify that the 
+project meets the specifications and is well constructed.
+
+
+Monitor Program 
+
+he monitor program is a very simple program that interfaces the 
+base system with the user via several simple commands.  These 
+commands perform the basic necessary tasks needed for program 
+development and debugging. 
+
+Monitor Commands:
+     
+Daaaa            -  Displays  the contents of the next 16 memory 
+                    locations starting with address aaaa. 
+
+Iaaaa dd dd<cr>  -  Insert into successive memory locations 
+                    starting with address aaaa,  the data dd in  
+                    hexidecimal, until a carrage return is 
+                    inserted instead of a blank.
+
+Gaaaa            -  Go to execute code located at memory address 
+                    aaaa,  this turns on the interrupt enable 
+                    flag. 
+
+R                -  Registers, this displays the present top 16 
+                    memory locations of the Top Of Stack. This is 
+                    where the registers are stored at interrupt.     
+
+Q                -  Quit, this causes a return from interrupt, by 
+                    restoring the registers to the contents 
+                    before the interrupt.
+
+Maaaa llll bbbb  -  Move the contents of memory locations 
+                    starting at address aaaa, for length of llll, 
+                    to memory location bbbb.
+
+Faaaa llll bb    -  Fill the contents of memory locations 
+                    starting at address aaaa, for length of llll, 
+                    with fill byte bb.
+
+L                -  Loads into memory data in S record format, 
+                    used to down load programs from the 
+                    assembler.
+
+Saaaa llll      -   Dumps from memory data into S record format, 
+                    used to upload data. 
+
+<cr>             -  Carrage Return, causes the content of 
+                    the next 16 memory locations to displayed, 
+                    starting with the location after the one last 
+                    displayed.
+
+
+Debug Feature:
+
+A limited debug feature is possible by inserting RST 7 
+instructions (Hex FF) in the program at locations where debugging 
+is desired.  The RST 7 instructions cause an software interrupt 
+to the monitor, where the contents of the registers can be 
+examinied and modified, the contents of memory can be examined 
+and modified, and after which a Quit Command can be used to 
+return to the next operation after the RST 7.  When debugging is 
+complete the RST 7 instructions are replaced with NOP 
+instructions (Hex 00).
+
+Interrupt Feature:
+
+There are several locations in the monitor work space that are 
+used to hold the addresses of interrupt routines to handle the 
+user defined interrupts.   This allows using the interrupts of 
+the Intel 8085 without changing the Monitor on EPROM.
+
+Software UART Feature:
+
+Instead of using a hardware serial to parallel interface for 
+communicating with the CRT, a software program simulates the 
+UART's functions.  This program is a basic part of the monitor 
+program.  The communication options of the terminal must be setup 
+to be:
+     8-bit ASCII
+     No Parity bit
+     1 or 2 Stop bits
+     110 - 9600 BPS
+
+The baud rate can be set for any value between 110 and 9600 baud. 
+The baud rate is determined by computing the receiving baud rate 
+from identifying a <SPACE> character as the first character being 
+sent. Therefore, the <SPACE> bar must be the first character be 
+entered after power on/reset so that the data transfer rate can 
+be determined.   
+
+Instruction Assembler:
+
+This function shall allow a user to enter assembly language 
+programs, in 8085 mnemonic format, into the static ram.  The 
+instructions shall be encoded into their binary equivalent and 
+stored into sequential address in the ram.  The instructions 
+shall be entered via the RS-232 connection to the microcomputer.
+
+The assembler function is invoked by typing the following           
+command:
+
+A<addr><cr>    -    <addr> is the address that is to receive the 
+                    encoded machine level instructions.
+
+After the initial command line is entered, the user types in one 
+assembly instruction per line, line after line.  When the user 
+has completed his input, he must type a "@" character in line 1 
+of the next line to return to the monitor and enable processing 
+of the next command.
+
+An example of how to execute the assembler function follows:
+
+     A1000
+     MOV A,E
+     CALL 1200
+     JNZ 1300
+     ADD E
+     MVI H,B7
+     @
+
+Note: all 8-bit numeric inputs must be two hexadecimal digits;
+      all 16-bit numeric inputs must be four hexadecimal digits.
+      Either a comma or a space may be used to delimit arguments,
+      but only 1 delimiter between arguments is allowed.
+
+Instruction Disassembler:
+
+This function allows the user to specify that an existing 
+block of instruction memory, RAM or EPROM, be decoded into 8085 
+assembly language mnemonic format. The mnemonic instructions 
+shall be displayed, in text format, via the RS-232 connection to 
+the microcomputer.
+
+The disassembler function is invoked by typing the following          
+command:
+
+U<lo-addr> <hi-addr> -   <lo-addr> is the beginning address of 
+                         the memory block that is to be decoded 
+                         into assembly instructions
+                         <hi-addr> is the ending address of the 
+                         memory block that is to be decoded into 
+                         assembly instructions encoded machine 
+                         level instructions.
+
+An example of how to execute the disassembler function follows:
+
+                 U1000 1030
+
+Note: incorrect results may occur if the starting address of the        
+      block to be disassembled is the second or third byte of an        
+      instruction.
+

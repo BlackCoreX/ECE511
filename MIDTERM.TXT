@@ -1,0 +1,87 @@
+1. (5 points) What are the three buses of the Three-Bus 
+Architecture and describe the purpose of each.
+
+2. (5 points) Draw a memory map for a microcomputer with 4K of 
+EPROM memory at address 0000H, 2K of RAM at address 1000H,  16K 
+of memory mapped I/O beginning at 4000H,  and 32K of Dynamic RAM 
+at address 8000H.  Label all unused memory space as "open."
+
+3. (5 points) How many total bytes does the following program 
+segment require?  Also, how many clock cycles will the program 
+segment require to execute.
+     MVI   A,32H
+     OUT   5
+     STA   06FFH
+     HLT
+
+4. (5 points) Draw the Opcode fetch timing diagram for the 8085 
+microprocessor and explain each control signal.
+
+5. (5 points) What is pin #35 of the 8085 microprocessor and 
+describe the function that it performs and how it is used.
+
+6. (5 points) What is the SP register of the 8085 microprocessor 
+programming model and describe the function it performs.
+
+7. (5 points) The 8085 instruction ANI 40H will test bit 6 of 
+register A. Explain why and what flag will be set.  Use the OR 
+instruction to set bit 6 of register A without changing any of 
+the other bits. Show the proper mnemonic.   
+
+8. (5 points) Draw the mapping of the 8085 interrupts into low 
+memory locations. Also specify the priority of each.
+
+9. (10 points) Disassemble the following program by determining 
+the proper mnemonics for the given hex codes.  Assume that the 
+codes are found in memory beginning at address 0600H.
+     0600 3E
+     0601 3C
+     0602 DB
+     0603 03
+     0604 17
+     0605 D2
+     0606 02
+     0607 06
+     0608 A0
+     0609 D3
+     060A 05
+     060B 76
+
+10. (10 points)  Write a program that will subtract the 8 BCD 
+digit number stored at 0700H theough 0703H from the 8 BCD digit 
+number stored at 0704H through 0707H.  Store the difference at 
+0708H through 070BH.
+
+11. (10 points) The address decoder in the basic system project 
+decodes memory on 4K boundaries.  Therefore when the 6116 (2K 
+Static RAM) is connected to location 1000H, it only uses 
+addresses 1000H through 17FFH.  Design additional address 
+decoding circuitry so that two 6116's can be connected to the 
+basic project with the following addressing:
+     6116A   1000H - 17FFH
+and  6116B   1800H - 1FFFH
+
+12. (10 points) Modify the 8255A interface design in Figure 7.6 
+so that it will interface with the basic system project.  Memory-
+map the 8255A at address 4000H. Write the initialization routine 
+to program the 8255A for Mode 0 with port A as output and port B 
+as input.    
+
+13. (10 points) Modify the 8251A interface design in Figure 9.15 
+so that it will interface with the basic system project. Memory-
+map the 8251A at address 5000H. Write the initialization routine 
+to program the 8251A for asynchronous transmission with 8 data 
+bits, 2 stop bits, and no parity.  Also select a 16X clock and 
+program DTR* and RTS* active.
+
+14. (10 points) Modify the 8254 interface design in Figure 7.23 
+so that it will interface with the basic system project as a Baud 
+Rate Generator.  Memory-map the 8254 at address 6000H.  Connect 
+Counter 0 to the 8085 system clock and to the 8251A Baud rate 
+inputs.  Assume the 8085 is using a 4.9152MHz crystal.  Write the 
+initialzation routine to program the 8254 Counter 0 for Mode 3 
+(Square-wave generator), Binary, 16-Bits.  Use the initial count 
+necessary to produce a baud rate of 9600 bps  (you can keep the 
+count in decimal for the problem).    
+
+  

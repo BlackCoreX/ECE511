@@ -1,0 +1,1993 @@
+         Page    1           File c:monitor4.asm
+
+0001 4000            TOS       EQU      4000H
+0002 000A            LF        EQU      0AH
+0003 000D            CR        EQU      0DH
+0004 0000                      ORG      0
+0005 0000 310040     RST0      LXI      SP,TOS
+0006 0003 C38800               JMP      INIT
+0007 0006 00                   NOP
+0008 0007 00                   NOP
+0009 0008 F5         RST1      PUSH     PSW
+0010 0009 E5                   PUSH     H
+0011 000A D5                   PUSH     D
+0012 000B C5                   PUSH     B
+0013 000C 2A0037               LHLD     SLI1
+0014 000F E9                   PCHL
+0015 0010 F5         RST2      PUSH     PSW
+0016 0011 E5                   PUSH     H
+0017 0012 D5                   PUSH     D
+0018 0013 C5                   PUSH     B
+0019 0014 2A0237               LHLD     SLI2
+0020 0017 E9                   PCHL
+0021 0018 F5         RST3      PUSH     PSW
+0022 0019 E5                   PUSH     H
+0023 001A D5                   PUSH     D
+0024 001B C5                   PUSH     B
+0025 001C 2A0437               LHLD     SLI3
+0026 001F E9                   PCHL
+0027 0020 C34000     RST4      JMP      FLI4
+0028 0023 00                   NOP
+0029 0024 C34800     IN45      JMP      TRAP
+0030 0027 00                   NOP
+0031 0028 C35000     RST5      JMP      FLI5
+0032 002B 00                   NOP
+0033 002C C35800     IN55      JMP      FL55
+0034 002F 00                   NOP
+0035 0030 C36000     RST6      JMP      FLI6
+0036 0033 00                   NOP
+0037 0034 C36800     IN65      JMP      FL65
+0038 0037 00                   NOP
+0039 0038 C37000     RST7      JMP      FLI7
+0040 003B 00                   NOP
+0041 003C C37800     IN75      JMP      FL75
+0042 003F 00                   NOP
+0043 0040 F5         FLI4      PUSH     PSW
+0044 0041 E5                   PUSH     H
+0045 0042 D5                   PUSH     D
+0046 0043 C5                   PUSH     B
+0047 0044 2A0637               LHLD     SLI4
+0048 0047 E9                   PCHL
+0049 0048 F5         TRAP      PUSH     PSW
+0050 0049 E5                   PUSH     H
+0051 004A D5                   PUSH     D
+0052 004B C5                   PUSH     B
+0053 004C 2A0837               LHLD     SL45
+0054 004F E9                   PCHL
+0055 0050 F5         FLI5      PUSH     PSW
+0056 0051 E5                   PUSH     H
+0057 0052 D5                   PUSH     D
+0058 0053 C5                   PUSH     B
+         Page    2           File c:monitor4.asm
+
+0059 0054 2A0A37               LHLD     SLI5
+0060 0057 E9                   PCHL
+0061 0058 F5         FL55      PUSH     PSW
+0062 0059 E5                   PUSH     H
+0063 005A D5                   PUSH     D
+0064 005B C5                   PUSH     B
+0065 005C 2A0C37               LHLD     SL55
+0066 005F E9                   PCHL
+0067 0060 F5         FLI6      PUSH     PSW
+0068 0061 E5                   PUSH     H
+0069 0062 D5                   PUSH     D
+0070 0063 C5                   PUSH     B
+0071 0064 2A0E37               LHLD     SLI6
+0072 0067 E9                   PCHL
+0073 0068 F5         FL65      PUSH     PSW
+0074 0069 E5                   PUSH     H
+0075 006A D5                   PUSH     D
+0076 006B C5                   PUSH     B
+0077 006C 2A1037               LHLD     SL65
+0078 006F E9                   PCHL
+0079 0070 F5         FLI7      PUSH     PSW
+0080 0071 E5                   PUSH     H
+0081 0072 D5                   PUSH     D
+0082 0073 C5                   PUSH     B
+0083 0074 C39000               JMP      MNTR
+0084 0077 00                   NOP
+0085 0078 F5         FL75      PUSH     PSW
+0086 0079 E5                   PUSH     H
+0087 007A D5                   PUSH     D
+0088 007B C5                   PUSH     B
+0089 007C 2A1437               LHLD     SL75
+0090 007F E9                   PCHL
+0091 0080 C1         RETI      POP      B
+0092 0081 D1                   POP      D
+0093 0082 E1                   POP      H
+0094 0083 F1                   POP      PSW
+0095 0084 FB                   EI
+0096 0085 C9                   RET
+0097 0086 00                   NOP
+0098 0087 00                   NOP
+0099                 ;    INITIALIZATION
+0100 0088 3EC0       INIT      MVI      A,00C0H
+0101 008A 30                   SIM
+0102 008B CDFA02               CALL     BRID
+0103 008E 00                   NOP
+0104 008F 00                   NOP
+0105                 ;    MONITOR MAIN LOOP
+0106 0090 3E0A       MNTR      MVI      A,LF
+0107 0092 CD9402               CALL     OUTC
+0108 0095 3E0D                 MVI      A,CR
+0109 0097 CD9402               CALL     OUTC
+0110 009A 3E3F                 MVI      A,'?'
+0111 009C CD9402               CALL     OUTC
+0112 009F CD9C02               CALL     INPC
+0113 00A2 FE4C                 CPI      'L'
+0114 00A4 CABC01               JZ       LD
+0115 00A7 FE44                 CPI      'D'
+0116 00A9 CAF900               JZ       DP
+         Page    3           File c:monitor4.asm
+
+0117 00AC FE0D                 CPI      CR
+0118 00AE CA1E01               JZ       R5
+0119 00B1 FE47                 CPI      'G'
+0120 00B3 CA2901               JZ       G
+0121 00B6 FE52                 CPI      'R'
+0122 00B8 CA1A01               JZ       R
+0123 00BB FE51                 CPI      'Q'
+0124 00BD CA8000               JZ       RETI
+0125 00C0 FE4D                 CPI      'M'
+0126 00C2 CA2E01               JZ       MV
+0127 00C5 FE46                 CPI      'F'
+0128 00C7 CA5601               JZ       F
+0129 00CA FE49                 CPI      'I'
+0130 00CC CAE100               JZ       I
+0131 00CF FE53                 CPI      'S'
+0132 00D1 CAF601               JZ       S
+0133 00D4 FE55                 CPI      'U'
+0134 00D6 CA0007               JZ       U
+0135 00D9 FE41                 CPI      'A'
+0136 00DB CA0004               JZ       AS
+0137 00DE C39000               JMP      MNTR
+0138                 ;    INSERT ROUTINE
+0139 00E1 CDB301     I         CALL     HLHX
+0140 00E4 3E20                 MVI      A,' '
+0141 00E6 CD9402               CALL     OUTC
+0142 00E9 CD9901     INXX      CALL     GTHX
+0143 00EC 77                   MOV      M,A
+0144 00ED 23                   INX      H
+0145 00EE CD9C02               CALL     INPC
+0146 00F1 FE20                 CPI      ' '
+0147 00F3 CAE900               JZ       INXX
+0148 00F6 C39000               JMP      MNTR
+0149                 ;    DISPLAY ROUTINE
+0150 00F9 CDB301     DP        CALL     HLHX
+0151 00FC 3E20       D3        MVI      A,' '
+0152 00FE CD9402               CALL     OUTC
+0153 0101 1E10                 MVI      E,16
+0154 0103 7E         DNX       MOV      A,M
+0155 0104 CD7D01               CALL     PTHX
+0156 0107 23                   INX      H
+0157 0108 1D                   DCR      E
+0158 0109 7E                   MOV      A,M
+0159 010A CD7D01               CALL     PTHX
+0160 010D 23                   INX      H
+0161 010E 3E20                 MVI      A,' '
+0162 0110 CD9402               CALL     OUTC
+0163 0113 1D                   DCR      E
+0164 0114 C20301               JNZ      DNX
+0165 0117 C39000               JMP      MNTR
+0166                 ;    REGISTERS
+0167 011A AF         R         XRA      A
+0168 011B 67                   MOV      H,A
+0169 011C 6F                   MOV      L,A
+0170 011D 39                   DAD      SP
+0171 011E 7C         R5        MOV      A,H
+0172 011F CD7D01               CALL     PTHX
+0173 0122 7D                   MOV      A,L
+0174 0123 CD7D01               CALL     PTHX
+         Page    4           File c:monitor4.asm
+
+0175 0126 C3FC00               JMP      D3
+0176                 ;    GOTO EXEC
+0177 0129 CDB301     G         CALL     HLHX
+0178 012C FB                   EI
+0179 012D E9                   PCHL
+0180                 ;    MOVE MEMORY
+0181 012E CDB301     MV        CALL     HLHX
+0182 0131 E5                   PUSH     H
+0183 0132 3E20                 MVI      A,' '
+0184 0134 CD9402               CALL     OUTC
+0185 0137 CDB301               CALL     HLHX
+0186 013A E5                   PUSH     H
+0187 013B 3E20                 MVI      A,' '
+0188 013D CD9402               CALL     OUTC
+0189 0140 CDB301               CALL     HLHX
+0190 0143 D1                   POP      D
+0191 0144 C1                   POP      B
+0192 0145 CD4B01               CALL     MOVE
+0193 0148 C39000               JMP      MNTR
+0194 014B 0A         MOVE      LDAX     B
+0195 014C 77                   MOV      M,A
+0196 014D 03                   INX      B
+0197 014E 23                   INX      H
+0198 014F 1B                   DCX      D
+0199 0150 7B                   MOV      A,E
+0200 0151 B2                   ORA      D
+0201 0152 C24B01               JNZ      MOVE
+0202 0155 C9                   RET
+0203                 ;    FILL MEMORY
+0204 0156 CDB301     F         CALL     HLHX
+0205 0159 E5                   PUSH     H
+0206 015A 3E20                 MVI      A,' '
+0207 015C CD9402               CALL     OUTC
+0208 015F CDB301               CALL     HLHX
+0209 0162 E5                   PUSH     H
+0210 0163 3E20                 MVI      A,' '
+0211 0165 CD9402               CALL     OUTC
+0212 0168 CD9901               CALL     GTHX
+0213 016B 4F                   MOV      C,A
+0214 016C D1                   POP      D
+0215 016D E1                   POP      H
+0216 016E CD7401               CALL     FILL
+0217 0171 C39000               JMP      MNTR
+0218 0174 71         FILL      MOV      M,C
+0219 0175 23                   INX      H
+0220 0176 1B                   DCX      D
+0221 0177 7B                   MOV      A,E
+0222 0178 B2                   ORA      D
+0223 0179 C27401               JNZ      FILL
+0224 017C C9                   RET
+0225                 ;    PUT OUT HEX
+0226 017D 57         PTHX      MOV      D,A
+0227 017E 1F                   RAR
+0228 017F 1F                   RAR
+0229 0180 1F                   RAR
+0230 0181 1F                   RAR
+0231 0182 CD8A01               CALL     OTHX
+0232 0185 7A                   MOV      A,D
+         Page    5           File c:monitor4.asm
+
+0233 0186 CD8A01               CALL     OTHX
+0234 0189 C9                   RET
+0235 018A E60F       OTHX      ANI      0FH
+0236 018C FE0A                 CPI      10
+0237 018E FA9301               JM       HXNM
+0238 0191 C607                 ADI      7
+0239 0193 C630       HXNM      ADI      30H
+0240 0195 CD9402               CALL     OUTC
+0241 0198 C9                   RET
+0242                 ;    GET HEX IN
+0243 0199 CDAA01     GTHX      CALL     CNHX
+0244 019C E60F                 ANI      0FH
+0245 019E 87                   ADD      A
+0246 019F 87                   ADD      A
+0247 01A0 87                   ADD      A
+0248 01A1 87                   ADD      A
+0249 01A2 5F                   MOV      E,A
+0250 01A3 CDAA01               CALL     CNHX
+0251 01A6 E60F                 ANI      0FH
+0252 01A8 B3                   ORA      E
+0253 01A9 C9                   RET
+0254 01AA CD9C02     CNHX      CALL     INPC
+0255 01AD FE40                 CPI      40H
+0256 01AF F8                   RM
+0257 01B0 C609                 ADI      9
+0258 01B2 C9                   RET
+0259 01B3 CD9901     HLHX      CALL     GTHX
+0260 01B6 67                   MOV      H,A
+0261 01B7 CD9901               CALL     GTHX
+0262 01BA 6F                   MOV      L,A
+0263 01BB C9                   RET
+0264                 ;    LOAD S-RECORD INPUT
+0265 01BC CD9C02     LD        CALL     INPC
+0266 01BF FE53                 CPI      'S'
+0267 01C1 C20500               JNZ      L
+0268 01C4 CD9C02               CALL     INPC
+0269 01C7 FE39                 CPI      '9'
+0270 01C9 CAE701               JZ       S9
+0271 01CC CD9901               CALL     GTHX
+0272 01CF 4F                   MOV      C,A
+0273 01D0 CDB301               CALL     HLHX
+0274 01D3 0D                   DCR      C
+0275 01D4 0D                   DCR      C
+0276 01D5 0D         SX        DCR      C
+0277 01D6 CAE101               JZ       SY
+0278 01D9 CD9901               CALL     GTHX
+0279 01DC 77                   MOV      M,A
+0280 01DD 23                   INX      H
+0281 01DE C3D501               JMP      SX
+0282 01E1 CD9901     SY        CALL     GTHX
+0283 01E4 C30500               JMP      L
+0284 01E7 CD9901     S9        CALL     GTHX
+0285 01EA 4F                   MOV      C,A
+0286 01EB 0D                   DCR      C
+0287 01EC CD9901     SO        CALL     GTHX
+0288 01EF 0D                   DCR      C
+0289 01F0 C2EC01               JNZ      SO
+0290 01F3 C39000               JMP      MNTR
+         Page    6           File c:monitor4.asm
+
+0291                 ;    SEND S-RECORD OUTPUT
+0292 01F6 CDB301     S         CALL     HLHX
+0293 01F9 E5                   PUSH     H
+0294 01FA 3E20                 MVI      A,20H
+0295 01FC CD9402               CALL     OUTC
+0296 01FF CDB301               CALL     HLHX
+0297 0202 221A37               SHLD     TBC
+0298 0205 E1                   POP      H
+0299 0206 3E0D       XNEW      MVI      A,CR
+0300 0208 CD9402               CALL     OUTC
+0301 020B 3E0A                 MVI      A,LF
+0302 020D CD9402               CALL     OUTC
+0303 0210 7C                   MOV      A,H
+0304 0211 321E37               STA      SADE
+0305 0214 7D                   MOV      A,L
+0306 0215 321F37               STA      SADF
+0307 0218 3E00                 MVI      A,0
+0308 021A 1E03                 MVI      E,3
+0309 021C 84                   ADD      H
+0310 021D 85                   ADD      L
+0311 021E 57                   MOV      D,A
+0312 021F 012037               LXI      B,CD
+0313 0222 7E         XLOP      MOV      A,M
+0314 0223 02                   STAX     B
+0315 0224 82                   ADD      D
+0316 0225 57                   MOV      D,A
+0317 0226 23                   INX      H
+0318 0227 03                   INX      B
+0319 0228 E5                   PUSH     H
+0320 0229 2A1A37               LHLD     TBC
+0321 022C 2B                   DCX      H
+0322 022D 221A37               SHLD     TBC
+0323 0230 7C                   MOV      A,H
+0324 0231 B5                   ORA      L
+0325 0232 CA4302               JZ       XFNS
+0326 0235 E1                   POP      H
+0327 0236 1C                   INR      E
+0328 0237 7B                   MOV      A,E
+0329 0238 FE13                 CPI      13H
+0330 023A C22202               JNZ      XLOP
+0331 023D CD6202               CALL     XREC
+0332 0240 C30602               JMP      XNEW
+0333 0243 CD6202     XFNS      CALL     XREC
+0334 0246 3E0A                 MVI      A,LF
+0335 0248 CD9402               CALL     OUTC
+0336 024B 3E0D                 MVI      A,CR
+0337 024D CD9402               CALL     OUTC
+0338 0250 160A                 MVI      D,10
+0339 0252 018A02               LXI      B,XLST
+0340 0255 0A         XFNX      LDAX     B
+0341 0256 CD9402               CALL     OUTC
+0342 0259 03                   INX      B
+0343 025A 15                   DCR      D
+0344 025B C25502               JNZ      XFNX
+0345 025E E1                   POP      H
+0346 025F C39000               JMP      MNTR
+0347 0262 E5         XREC      PUSH     H
+0348 0263 7A                   MOV      A,D
+         Page    7           File c:monitor4.asm
+
+0349 0264 83                   ADD      E
+0350 0265 321C37               STA      CRC
+0351 0268 7B                   MOV      A,E
+0352 0269 321D37               STA      SBC
+0353 026C 3E53                 MVI      A,'S'
+0354 026E CD9402               CALL     OUTC
+0355 0271 3E31                 MVI      A,'1'
+0356 0273 CD9402               CALL     OUTC
+0357 0276 211D37               LXI      H,SBC
+0358 0279 7E         XNXT      MOV      A,M
+0359 027A CD7D01               CALL     PTHX
+0360 027D 23                   INX      H
+0361 027E 1D                   DCR      E
+0362 027F C27902               JNZ      XNXT
+0363 0282 3A1C37               LDA      CRC
+0364 0285 CD7D01               CALL     PTHX
+0365 0288 E1                   POP      H
+0366 0289 C9                   RET
+0367 028A 53         XLST      DB       'S'
+0368 028B 39                   DB       '9'
+0369 028C 30                   DB       '0'
+0370 028D 33                   DB       '3'
+0371 028E 30                   DB       '0'
+0372 028F 30                   DB       '0'
+0373 0290 30                   DB       '0'
+0374 0291 30                   DB       '0'
+0375 0292 46                   DB       'F'
+0376 0293 43                   DB       'C'
+0377                 ;    OUTPUT CALL
+0378 0294 C5         OUTC      PUSH     B
+0379 0295 4F                   MOV      C,A
+0380 0296 CDD702               CALL     COUT
+0381 0299 79                   MOV      A,C
+0382 029A C1                   POP      B
+0383 029B C9                   RET
+0384                 ;    INPUT CALL
+0385 029C C5         INPC      PUSH     B
+0386 029D CDA602               CALL     CINP
+0387 02A0 79                   MOV      A,C
+0388 02A1 E67F                 ANI      7FH
+0389 02A3 C1                   POP      B
+0390 02A4 C9                   RET
+0391 02A5 00                   NOP
+0392                 ;    CONSOLE INPUT ROUTINE
+0393 02A6 F3         CINP      DI
+0394 02A7 E5                   PUSH     H
+0395 02A8 0609                 MVI      B,9
+0396 02AA 20         CI1       RIM
+0397 02AB B7                   ORA      A
+0398 02AC FAAA02               JM       CI1
+0399 02AF 2A1837               LHLD     HALF
+0400 02B2 2D         CI2       DCR      L
+0401 02B3 C2B202               JNZ      CI2
+0402 02B6 25                   DCR      H
+0403 02B7 C2B202               JNZ      CI2
+0404 02BA 2A1637     CI3       LHLD     FULL
+0405 02BD 2D         CI4       DCR      L
+0406 02BE C2BD02               JNZ      CI4
+         Page    8           File c:monitor4.asm
+
+0407 02C1 25                   DCR      H
+0408 02C2 C2BD02               JNZ      CI4
+0409 02C5 20                   RIM
+0410 02C6 17                   RAL
+0411 02C7 05                   DCR      B
+0412 02C8 CAD202               JZ       CI5
+0413 02CB 79                   MOV      A,C
+0414 02CC 1F                   RAR
+0415 02CD 4F                   MOV      C,A
+0416 02CE 00                   NOP
+0417 02CF C3BA02               JMP      CI3
+0418 02D2 E1         CI5       POP      H
+0419 02D3 FB                   EI
+0420 02D4 C9                   RET
+0421 02D5 00                   NOP
+0422 02D6 00                   NOP
+0423                 ;    CONSOLE OUTPUT ROUTINE
+0424 02D7 F3         COUT      DI
+0425 02D8 C5                   PUSH     B
+0426 02D9 E5                   PUSH     H
+0427 02DA 060B                 MVI      B,11
+0428 02DC AF                   XRA      A
+0429 02DD 3E80       CO1       MVI      A,80H
+0430 02DF 1F                   RAR
+0431 02E0 30                   SIM
+0432 02E1 2A1637               LHLD     FULL
+0433 02E4 2D         CO2       DCR      L
+0434 02E5 C2E402               JNZ      CO2
+0435 02E8 25                   DCR      H
+0436 02E9 C2E402               JNZ      CO2
+0437 02EC 37                   STC
+0438 02ED 79                   MOV      A,C
+0439 02EE 1F                   RAR
+0440 02EF 4F                   MOV      C,A
+0441 02F0 05                   DCR      B
+0442 02F1 C2DD02               JNZ      CO1
+0443 02F4 E1                   POP      H
+0444 02F5 C1                   POP      B
+0445 02F6 FB                   EI
+0446 02F7 C9                   RET
+0447 02F8 00                   NOP
+0448 02F9 00                   NOP
+0449                 ;    AUTO BPS RATE DETECT
+0450 02FA 20         BRID      RIM
+0451 02FB B7                   ORA      A
+0452 02FC F2FA02               JP       BRID
+0453 02FF 20         BR1       RIM
+0454 0300 B7                   ORA      A
+0455 0301 FAFF02               JM       BR1
+0456 0304 21FAFF               LXI      H,0FFFAH
+0457 0307 1E04       BR3       MVI      E,4
+0458 0309 1D         BR4       DCR      E
+0459 030A C20903               JNZ      BR4
+0460 030D 23                   INX      H
+0461 030E 20                   RIM
+0462 030F B7                   ORA      A
+0463 0310 F20703               JP       BR3
+0464 0313 E5                   PUSH     H
+         Page    9           File c:monitor4.asm
+
+0465 0314 24                   INR      H
+0466 0315 2C                   INR      L
+0467 0316 221637               SHLD     FULL
+0468 0319 E1                   POP      H
+0469 031A B7                   ORA      A
+0470 031B 7C                   MOV      A,H
+0471 031C 1F                   RAR
+0472 031D 67                   MOV      H,A
+0473 031E 7D                   MOV      A,L
+0474 031F 1F                   RAR
+0475 0320 6F                   MOV      L,A
+0476 0321 24                   INR      H
+0477 0322 2C                   INR      L
+0478 0323 221837               SHLD     HALF
+0479 0326 C9                   RET
+0480                 ;    LINE ASSEMBLER CODE
+0481 0400                      ORG      0400H
+0482 0400 21ECFF     AS        LXI      H,0FFECH
+0483 0403 39                   DAD      SP
+0484 0404 F9                   SPHL
+0485 0405 E5                   PUSH     H
+0486 0406 44                   MOV      B,H
+0487 0407 4D                   MOV      C,L
+0488 0408 CDB301               CALL     HLHX
+0489 040B E5                   PUSH     H
+0490 040C 3E0A                 MVI      A,10
+0491 040E CD9402               CALL     OUTC
+0492 0411 3E0D                 MVI      A,13
+0493 0413 CD9402               CALL     OUTC
+0494 0416 60                   MOV      H,B
+0495 0417 69                   MOV      L,C
+0496 0418 CDBE04     A001      CALL     ALIN
+0497 041B 4F                   MOV      C,A
+0498 041C 50                   MOV      D,B
+0499 041D 7E                   MOV      A,M
+0500 041E FE40                 CPI      '@'
+0501 0420 CA6104               JZ       A099
+0502 0423 79                   MOV      A,C
+0503 0424 CD6904               CALL     ASCH
+0504 0427 FE00                 CPI      0
+0505 0429 CA3204               JZ       A002
+0506 042C CDF804               CALL     ANXT
+0507 042F C35704               JMP      A022
+0508 0432 7A         A002      MOV      A,D
+0509 0433 CD6904               CALL     ASCH
+0510 0436 FE00                 CPI      0
+0511 0438 CA4104               JZ       A003
+0512 043B CDF804               CALL     ANXT
+0513 043E C35704               JMP      A022
+0514 0441 3E01       A003      MVI      A,1
+0515 0443 CD6904               CALL     ASCH
+0516 0446 FE00                 CPI      0
+0517 0448 CA4F04               JZ       A004
+0518 044B 23                   INX      H
+0519 044C C35704               JMP      A022
+0520 044F 3E3F       A004      MVI      A,'?'
+0521 0451 CD9402               CALL     OUTC
+0522 0454 C31804               JMP      A001
+         Page   10           File c:monitor4.asm
+
+0523 0457 D1         A022      POP      D
+0524 0458 CD6E05               CALL     ASSM
+0525 045B E1                   POP      H
+0526 045C E5                   PUSH     H
+0527 045D D5                   PUSH     D
+0528 045E C31804               JMP      A001
+0529 0461 211800     A099      LXI      H,24
+0530 0464 39                   DAD      SP
+0531 0465 F9                   SPHL
+0532 0466 C39000               JMP      MNTR
+0533 0469 D5         ASCH      PUSH     D
+0534 046A E5                   PUSH     H
+0535 046B 011C09               LXI      B,INST
+0536 046E 5F                   MOV      E,A
+0537 046F 03         AS01      INX      B
+0538 0470 0A                   LDAX     B
+0539 0471 0B                   DCX      B
+0540 0472 BB                   CMP      E
+0541 0473 C29504               JNZ      AS22
+0542 0476 D5                   PUSH     D
+0543 0477 E5                   PUSH     H
+0544 0478 C5                   PUSH     B
+0545 0479 03                   INX      B
+0546 047A 03                   INX      B
+0547 047B 3E00       AS02      MVI      A,0
+0548 047D BB                   CMP      E
+0549 047E CA8C04               JZ       AS33
+0550 0481 0A                   LDAX     B
+0551 0482 BE                   CMP      M
+0552 0483 C28C04               JNZ      AS33
+0553 0486 1D                   DCR      E
+0554 0487 03                   INX      B
+0555 0488 23                   INX      H
+0556 0489 C37B04               JMP      AS02
+0557 048C 7B         AS33      MOV      A,E
+0558 048D C1                   POP      B
+0559 048E E1                   POP      H
+0560 048F D1                   POP      D
+0561 0490 FE00                 CPI      0
+0562 0492 CAB904               JZ       AS03
+0563 0495 E5         AS22      PUSH     H
+0564 0496 60                   MOV      H,B
+0565 0497 69                   MOV      L,C
+0566 0498 03                   INX      B
+0567 0499 0A                   LDAX     B
+0568 049A C603                 ADI      3
+0569 049C 0600                 MVI      B,0
+0570 049E 4F                   MOV      C,A
+0571 049F 09                   DAD      B
+0572 04A0 44                   MOV      B,H
+0573 04A1 4D                   MOV      C,L
+0574 04A2 21AA0A               LXI      H,TEND
+0575 04A5 7C                   MOV      A,H
+0576 04A6 B8                   CMP      B
+0577 04A7 C2B504               JNZ      AS05
+0578 04AA 7D                   MOV      A,L
+0579 04AB B9                   CMP      C
+0580 04AC C2B504               JNZ      AS05
+         Page   11           File c:monitor4.asm
+
+0581 04AF E1                   POP      H
+0582 04B0 3E00                 MVI      A,0
+0583 04B2 C3BB04               JMP      AS04
+0584 04B5 E1         AS05      POP      H
+0585 04B6 C36F04               JMP      AS01
+0586 04B9 3E01       AS03      MVI      A,1
+0587 04BB E1         AS04      POP      H
+0588 04BC D1                   POP      D
+0589 04BD C9                   RET
+0590 04BE E5         ALIN      PUSH     H
+0591 04BF D5                   PUSH     D
+0592 04C0 0600                 MVI      B,0
+0593 04C2 1E00                 MVI      E,0
+0594 04C4 1600                 MVI      D,0
+0595 04C6 CD9C02     AL01      CALL     INPC
+0596 04C9 FE0D                 CPI      13
+0597 04CB CAEF04               JZ       AL99
+0598 04CE 77                   MOV      M,A
+0599 04CF 1C                   INR      E
+0600 04D0 23                   INX      H
+0601 04D1 FE2C                 CPI      ','
+0602 04D3 C2DB04               JNZ      AL02
+0603 04D6 1601                 MVI      D,1
+0604 04D8 C3C604               JMP      AL01
+0605 04DB FE20       AL02      CPI      ' '
+0606 04DD C2E504               JNZ      AL03
+0607 04E0 1601                 MVI      D,1
+0608 04E2 C3C604               JMP      AL01
+0609 04E5 7A         AL03      MOV      A,D
+0610 04E6 FE00                 CPI      0
+0611 04E8 C2C604               JNZ      AL01
+0612 04EB 04                   INR      B
+0613 04EC C3C604               JMP      AL01
+0614 04EF 3E0A       AL99      MVI      A,10
+0615 04F1 CD9402               CALL     OUTC
+0616 04F4 7B                   MOV      A,E
+0617 04F5 D1                   POP      D
+0618 04F6 E1                   POP      H
+0619 04F7 C9                   RET
+0620 04F8 F5         ANXT      PUSH     PSW
+0621 04F9 C5                   PUSH     B
+0622 04FA 0614                 MVI      B,20
+0623 04FC 7E         AX01      MOV      A,M
+0624 04FD FE2C                 CPI      ','
+0625 04FF CA0C05               JZ       AX99
+0626 0502 FE20                 CPI      ' '
+0627 0504 CA0C05               JZ       AX99
+0628 0507 23                   INX      H
+0629 0508 05                   DCR      B
+0630 0509 C2FC04               JNZ      AX01
+0631 050C 23         AX99      INX      H
+0632 050D C1                   POP      B
+0633 050E F1                   POP      PSW
+0634 050F C9                   RET
+0635 0510 E5         ANUM      PUSH     H
+0636 0511 C5                   PUSH     B
+0637 0512 7E                   MOV      A,M
+0638 0513 FE41                 CPI      41H
+         Page   12           File c:monitor4.asm
+
+0639 0515 FA1D05               JM       AN01
+0640 0518 D637                 SUI      37H
+0641 051A C31F05               JMP      AN02
+0642 051D D630       AN01      SUI      30H
+0643 051F 07         AN02      RLC
+0644 0520 07                   RLC
+0645 0521 07                   RLC
+0646 0522 07                   RLC
+0647 0523 47                   MOV      B,A
+0648 0524 23                   INX      H
+0649 0525 7E                   MOV      A,M
+0650 0526 FE41                 CPI      41H
+0651 0528 FA3005               JM       AN03
+0652 052B D637                 SUI      37H
+0653 052D C33205               JMP      AN04
+0654 0530 D630       AN03      SUI      30H
+0655 0532 B0         AN04      ORA      B
+0656 0533 C1                   POP      B
+0657 0534 E1                   POP      H
+0658 0535 C9                   RET
+0659 0536 E5         ATBL      PUSH     H
+0660 0537 C5                   PUSH     B
+0661 0538 67                   MOV      H,A
+0662 0539 2E00                 MVI      L,0
+0663 053B 7D         AT01      MOV      A,L
+0664 053C BC                   CMP      H
+0665 053D CA6905               JZ       AT33
+0666 0540 7B                   MOV      A,E
+0667 0541 FE00                 CPI      0
+0668 0543 7D                   MOV      A,L
+0669 0544 CA4805               JZ       AT02
+0670 0547 07                   RLC
+0671 0548 C1         AT02      POP      B
+0672 0549 C5                   PUSH     B
+0673 054A E5                   PUSH     H
+0674 054B 60                   MOV      H,B
+0675 054C 69                   MOV      L,C
+0676 054D 4F                   MOV      C,A
+0677 054E 0600                 MVI      B,0
+0678 0550 09                   DAD      B
+0679 0551 44                   MOV      B,H
+0680 0552 4D                   MOV      C,L
+0681 0553 E1                   POP      H
+0682 0554 0A                   LDAX     B
+0683 0555 BA                   CMP      D
+0684 0556 C26505               JNZ      AT22
+0685 0559 3E00                 MVI      A,0
+0686 055B BB                   CMP      E
+0687 055C CA6A05               JZ       AT44
+0688 055F 03                   INX      B
+0689 0560 0A                   LDAX     B
+0690 0561 BB                   CMP      E
+0691 0562 CA6A05               JZ       AT44
+0692 0565 2C         AT22      INR      L
+0693 0566 C33B05               JMP      AT01
+0694 0569 2D         AT33      DCR      L
+0695 056A 7D         AT44      MOV      A,L
+0696 056B C1                   POP      B
+         Page   13           File c:monitor4.asm
+
+0697 056C E1                   POP      H
+0698 056D C9                   RET
+0699 056E D5         ASSM      PUSH     D
+0700 056F 0A                   LDAX     B
+0701 0570 12                   STAX     D
+0702 0571 57                   MOV      D,A
+0703 0572 1E01                 MVI      E,1
+0704 0574 E5         AM01      PUSH     H
+0705 0575 C5                   PUSH     B
+0706 0576 60                   MOV      H,B
+0707 0577 69                   MOV      L,C
+0708 0578 23                   INX      H
+0709 0579 7E                   MOV      A,M
+0710 057A 4F                   MOV      C,A
+0711 057B 0600                 MVI      B,0
+0712 057D 09                   DAD      B
+0713 057E 23                   INX      H
+0714 057F 46                   MOV      B,M
+0715 0580 3E01                 MVI      A,1
+0716 0582 BB                   CMP      E
+0717 0583 C29005               JNZ      AM02
+0718 0586 78                   MOV      A,B
+0719 0587 E6F0                 ANI      0F0H
+0720 0589 0F                   RRC
+0721 058A 0F                   RRC
+0722 058B 0F                   RRC
+0723 058C 0F                   RRC
+0724 058D C39305               JMP      AM03
+0725 0590 78         AM02      MOV      A,B
+0726 0591 E60F                 ANI      0FH
+0727 0593 C1         AM03      POP      B
+0728 0594 E1                   POP      H
+0729 0595 FE00                 CPI      0
+0730 0597 C2A005               JNZ      AM04
+0731 059A CDF804               CALL     ANXT
+0732 059D C36306               JMP      AM44
+0733 05A0 FE01       AM04      CPI      1
+0734 05A2 C2C305               JNZ      AM05
+0735 05A5 C5                   PUSH     B
+0736 05A6 D5                   PUSH     D
+0737 05A7 010009               LXI      B,PAIR
+0738 05AA 3E04                 MVI      A,4
+0739 05AC 56                   MOV      D,M
+0740 05AD 1E00                 MVI      E,0
+0741 05AF CD3605               CALL     ATBL
+0742 05B2 D1                   POP      D
+0743 05B3 C1                   POP      B
+0744 05B4 07                   RLC
+0745 05B5 07                   RLC
+0746 05B6 07                   RLC
+0747 05B7 07                   RLC
+0748 05B8 B2                   ORA      D
+0749 05B9 57                   MOV      D,A
+0750 05BA CDF804               CALL     ANXT
+0751 05BD E3                   XTHL
+0752 05BE 77                   MOV      M,A
+0753 05BF E3                   XTHL
+0754 05C0 C36306               JMP      AM44
+         Page   14           File c:monitor4.asm
+
+0755 05C3 FE02       AM05      CPI      2
+0756 05C5 C2E505               JNZ      AM06
+0757 05C8 C5                   PUSH     B
+0758 05C9 D5                   PUSH     D
+0759 05CA 010409               LXI      B,CCOD
+0760 05CD 3E08                 MVI      A,8
+0761 05CF 56                   MOV      D,M
+0762 05D0 23                   INX      H
+0763 05D1 5E                   MOV      E,M
+0764 05D2 CD3605               CALL     ATBL
+0765 05D5 D1                   POP      D
+0766 05D6 C1                   POP      B
+0767 05D7 07                   RLC
+0768 05D8 07                   RLC
+0769 05D9 07                   RLC
+0770 05DA B2                   ORA      D
+0771 05DB 57                   MOV      D,A
+0772 05DC CDF804               CALL     ANXT
+0773 05DF E3                   XTHL
+0774 05E0 77                   MOV      M,A
+0775 05E1 E3                   XTHL
+0776 05E2 C36306               JMP      AM44
+0777 05E5 FE03       AM06      CPI      3
+0778 05E7 C2FB05               JNZ      AM07
+0779 05EA CD1005               CALL     ANUM
+0780 05ED 07                   RLC
+0781 05EE 07                   RLC
+0782 05EF 07                   RLC
+0783 05F0 B2                   ORA      D
+0784 05F1 57                   MOV      D,A
+0785 05F2 CDF804               CALL     ANXT
+0786 05F5 E3                   XTHL
+0787 05F6 77                   MOV      M,A
+0788 05F7 E3                   XTHL
+0789 05F8 C36306               JMP      AM44
+0790 05FB FE04       AM07      CPI      4
+0791 05FD C20D06               JNZ      AM08
+0792 0600 E3                   XTHL
+0793 0601 72                   MOV      M,D
+0794 0602 23                   INX      H
+0795 0603 E3                   XTHL
+0796 0604 CD1005               CALL     ANUM
+0797 0607 E3                   XTHL
+0798 0608 77                   MOV      M,A
+0799 0609 E3                   XTHL
+0800 060A C36306               JMP      AM44
+0801 060D FE05       AM08      CPI      5
+0802 060F C22A06               JNZ      AM09
+0803 0612 E3                   XTHL
+0804 0613 72                   MOV      M,D
+0805 0614 23                   INX      H
+0806 0615 E3                   XTHL
+0807 0616 CD1005               CALL     ANUM
+0808 0619 E3                   XTHL
+0809 061A 23                   INX      H
+0810 061B 77                   MOV      M,A
+0811 061C E3                   XTHL
+0812 061D 23                   INX      H
+         Page   15           File c:monitor4.asm
+
+0813 061E 23                   INX      H
+0814 061F CD1005               CALL     ANUM
+0815 0622 E3                   XTHL
+0816 0623 2B                   DCX      H
+0817 0624 77                   MOV      M,A
+0818 0625 23                   INX      H
+0819 0626 E3                   XTHL
+0820 0627 C36306               JMP      AM44
+0821 062A FE06       AM09      CPI      6
+0822 062C C24906               JNZ      AM10
+0823 062F C5                   PUSH     B
+0824 0630 D5                   PUSH     D
+0825 0631 011409               LXI      B,REGS
+0826 0634 3E08                 MVI      A,8
+0827 0636 56                   MOV      D,M
+0828 0637 1E00                 MVI      E,0
+0829 0639 CD3605               CALL     ATBL
+0830 063C D1                   POP      D
+0831 063D C1                   POP      B
+0832 063E B2                   ORA      D
+0833 063F 57                   MOV      D,A
+0834 0640 CDF804               CALL     ANXT
+0835 0643 E3                   XTHL
+0836 0644 77                   MOV      M,A
+0837 0645 E3                   XTHL
+0838 0646 C36306               JMP      AM44
+0839 0649 C5         AM10      PUSH     B
+0840 064A D5                   PUSH     D
+0841 064B 011409               LXI      B,REGS
+0842 064E 3E08                 MVI      A,8
+0843 0650 56                   MOV      D,M
+0844 0651 1E00                 MVI      E,0
+0845 0653 CD3605               CALL     ATBL
+0846 0656 07                   RLC
+0847 0657 07                   RLC
+0848 0658 07                   RLC
+0849 0659 D1                   POP      D
+0850 065A C1                   POP      B
+0851 065B B2                   ORA      D
+0852 065C 57                   MOV      D,A
+0853 065D CDF804               CALL     ANXT
+0854 0660 E3                   XTHL
+0855 0661 77                   MOV      M,A
+0856 0662 E3                   XTHL
+0857 0663 3E02       AM44      MVI      A,2
+0858 0665 BB                   CMP      E
+0859 0666 CA6D06               JZ       AM45
+0860 0669 1C                   INR      E
+0861 066A C37405               JMP      AM01
+0862 066D D1         AM45      POP      D
+0863 066E 13                   INX      D
+0864 066F C9                   RET
+0865                 ;    DISASSEMBLER ROUTINE - U
+0866 0700                      ORG      0700H
+0867 0700 CDB301     U         CALL     HLHX
+0868 0703 E5                   PUSH     H
+0869 0704 3E20                 MVI      A,' '
+0870 0706 CD9402               CALL     OUTC
+         Page   16           File c:monitor4.asm
+
+0871 0709 CDB301               CALL     HLHX
+0872 070C 3E0A                 MVI      A,LF
+0873 070E CD9402               CALL     OUTC
+0874 0711 3E0D                 MVI      A,CR
+0875 0713 CD9402               CALL     OUTC
+0876 0716 D1                   POP      D
+0877 0717 E5         U001      PUSH     H
+0878 0718 D5                   PUSH     D
+0879 0719 7A                   MOV      A,D
+0880 071A CD7D01               CALL     PTHX
+0881 071D 7B                   MOV      A,E
+0882 071E CD7D01               CALL     PTHX
+0883 0721 D1                   POP      D
+0884 0722 3E20                 MVI      A,' '
+0885 0724 CD9402               CALL     OUTC
+0886 0727 0EFF                 MVI      C,0FFH
+0887 0729 1A                   LDAX     D
+0888 072A 47                   MOV      B,A
+0889 072B CD9A07               CALL     USCH
+0890 072E FE01                 CPI      1
+0891 0730 C23907               JNZ      U002
+0892 0733 CDC707               CALL     UDI
+0893 0736 C37D07               JMP      U003
+0894 0739 78         U002      MOV      A,B
+0895 073A 07                   RLC
+0896 073B 07                   RLC
+0897 073C E603                 ANI      3
+0898 073E FE01                 CPI      1
+0899 0740 C24807               JNZ      U004
+0900 0743 0EC0                 MVI      C,0C0H
+0901 0745 C36907               JMP      U007
+0902 0748 FE02       U004      CPI      2
+0903 074A C25207               JNZ      U005
+0904 074D 0EF8                 MVI      C,0F8H
+0905 074F C36907               JMP      U007
+0906 0752 FE03       U005      CPI      3
+0907 0754 C25C07               JNZ      U006
+0908 0757 0EC7                 MVI      C,0C7H
+0909 0759 C36907               JMP      U007
+0910 075C 78         U006      MOV      A,B
+0911 075D E604                 ANI      4
+0912 075F C26707               JNZ      U009
+0913 0762 0ECF                 MVI      C,0CFH
+0914 0764 C36907               JMP      U007
+0915 0767 0EC7       U009      MVI      C,0C7H
+0916 0769 CD9A07     U007      CALL     USCH
+0917 076C FE01                 CPI      1
+0918 076E C27707               JNZ      U008
+0919 0771 CDC707               CALL     UDI
+0920 0774 C37D07               JMP      U003
+0921 0777 3E3F       U008      MVI      A,'?'
+0922 0779 CD9402               CALL     OUTC
+0923 077C 13                   INX      D
+0924 077D 3E0D       U003      MVI      A,CR
+0925 077F CD9402               CALL     OUTC
+0926 0782 3E0A                 MVI      A,LF
+0927 0784 CD9402               CALL     OUTC
+0928 0787 E1                   POP      H
+         Page   17           File c:monitor4.asm
+
+0929 0788 E5                   PUSH     H
+0930 0789 7A                   MOV      A,D
+0931 078A 2F                   CMA
+0932 078B 47                   MOV      B,A
+0933 078C 7B                   MOV      A,E
+0934 078D 2F                   CMA
+0935 078E 4F                   MOV      C,A
+0936 078F 03                   INX      B
+0937 0790 09                   DAD      B
+0938 0791 7C                   MOV      A,H
+0939 0792 E1                   POP      H
+0940 0793 A1                   ANA      C         ; ?????
+0941 0794 F21707               JP       U001
+0942 0797 C39000               JMP      MNTR
+0943                 ;    SUBROUTINE USCH SEARCHES TABLE FOR MATCHING OPCODE
+0944 079A C5         USCH      PUSH     B
+0945 079B D5                   PUSH     D
+0946 079C 211C09               LXI      H,INST
+0947 079F 78                   MOV      A,B
+0948 07A0 A1                   ANA      C
+0949 07A1 47                   MOV      B,A
+0950 07A2 0E00                 MVI      C,0
+0951 07A4 7E         US01      MOV      A,M
+0952 07A5 23                   INX      H
+0953 07A6 B8                   CMP      B
+0954 07A7 C2AF07               JNZ      US02
+0955 07AA 0E01                 MVI      C,1
+0956 07AC C3C307               JMP      US99
+0957 07AF 5E         US02      MOV      E,M
+0958 07B0 1600                 MVI      D,0
+0959 07B2 19                   DAD      D
+0960 07B3 1E02                 MVI      E,2
+0961 07B5 19                   DAD      D
+0962 07B6 11AA0A               LXI      D,TEND
+0963 07B9 7A                   MOV      A,D
+0964 07BA BC                   CMP      H
+0965 07BB C2A407               JNZ      US01
+0966 07BE 7B                   MOV      A,E
+0967 07BF BD                   CMP      L
+0968 07C0 C2A407               JNZ      US01
+0969 07C3 79         US99      MOV      A,C
+0970 07C4 D1                   POP      D
+0971 07C5 C1                   POP      B
+0972 07C6 C9                   RET
+0973                 ;    SUBROUTINE UDI DISPLAYS A SINGLE INSTRUCTION AND
+0974 07C7 C5         UDI       PUSH     B
+0975 07C8 E5                   PUSH     H
+0976 07C9 4E                   MOV      C,M
+0977 07CA 23                   INX      H
+0978 07CB CDA508               CALL     UDW
+0979 07CE 3E20                 MVI      A,' '
+0980 07D0 CD9402               CALL     OUTC
+0981 07D3 0600                 MVI      B,0
+0982 07D5 09                   DAD      B
+0983 07D6 0601                 MVI      B,1
+0984 07D8 78         UD01      MOV      A,B
+0985 07D9 C5                   PUSH     B
+0986 07DA FE01                 CPI      1
+         Page   18           File c:monitor4.asm
+
+0987 07DC C2E707               JNZ      UD02
+0988 07DF 7E                   MOV      A,M
+0989 07E0 0F                   RRC
+0990 07E1 0F                   RRC
+0991 07E2 0F                   RRC
+0992 07E3 0F                   RRC
+0993 07E4 C3E807               JMP      UD03
+0994 07E7 7E         UD02      MOV      A,M
+0995 07E8 E60F       UD03      ANI      0FH
+0996 07EA FE00                 CPI      0
+0997 07EC CA9408               JZ       UD22
+0998 07EF FE01                 CPI      1
+0999 07F1 C20B08               JNZ      UD04
+1000 07F4 1A                   LDAX     D
+1001 07F5 E630                 ANI      30H
+1002 07F7 0F                   RRC
+1003 07F8 0F                   RRC
+1004 07F9 0F                   RRC
+1005 07FA 0F                   RRC
+1006 07FB E5                   PUSH     H
+1007 07FC 210009               LXI      H,PAIR
+1008 07FF 4F                   MOV      C,A
+1009 0800 0600                 MVI      B,0
+1010 0802 09                   DAD      B
+1011 0803 7E                   MOV      A,M
+1012 0804 E1                   POP      H
+1013 0805 CD9402               CALL     OUTC
+1014 0808 C39408               JMP      UD22
+1015 080B FE02       UD04      CPI      2
+1016 080D C22F08               JNZ      UD05
+1017 0810 1A                   LDAX     D
+1018 0811 E638                 ANI      38H
+1019 0813 0F                   RRC
+1020 0814 0F                   RRC
+1021 0815 E5                   PUSH     H
+1022 0816 210409               LXI      H,CCOD
+1023 0819 4F                   MOV      C,A
+1024 081A 0600                 MVI      B,0
+1025 081C 09                   DAD      B
+1026 081D 3E08                 MVI      A,8
+1027 081F CD9402               CALL     OUTC
+1028 0822 7E                   MOV      A,M
+1029 0823 CD9402               CALL     OUTC
+1030 0826 23                   INX      H
+1031 0827 7E                   MOV      A,M
+1032 0828 CD9402               CALL     OUTC
+1033 082B E1                   POP      H
+1034 082C C39408               JMP      UD22
+1035 082F FE03       UD05      CPI      3
+1036 0831 C24208               JNZ      UD06
+1037 0834 1A                   LDAX     D
+1038 0835 E638                 ANI      38H
+1039 0837 0F                   RRC
+1040 0838 0F                   RRC
+1041 0839 0F                   RRC
+1042 083A C630                 ADI      30H
+1043 083C CD9402               CALL     OUTC
+1044 083F C39408               JMP      UD22
+         Page   19           File c:monitor4.asm
+
+1045 0842 FE04       UD06      CPI      4
+1046 0844 C25108               JNZ      UD07
+1047 0847 13                   INX      D
+1048 0848 1A                   LDAX     D
+1049 0849 D5                   PUSH     D
+1050 084A CD7D01               CALL     PTHX
+1051 084D D1                   POP      D
+1052 084E C39408               JMP      UD22
+1053 0851 FE05       UD07      CPI      5
+1054 0853 C26908               JNZ      UD08
+1055 0856 13                   INX      D
+1056 0857 13                   INX      D
+1057 0858 1A                   LDAX     D
+1058 0859 D5                   PUSH     D
+1059 085A CD7D01               CALL     PTHX
+1060 085D D1                   POP      D
+1061 085E 1B                   DCX      D
+1062 085F 1A                   LDAX     D
+1063 0860 D5                   PUSH     D
+1064 0861 CD7D01               CALL     PTHX
+1065 0864 D1                   POP      D
+1066 0865 13                   INX      D
+1067 0866 C39408               JMP      UD22
+1068 0869 FE06       UD08      CPI      6
+1069 086B C28108               JNZ      UD09
+1070 086E 1A                   LDAX     D
+1071 086F E607                 ANI      07H
+1072 0871 E5                   PUSH     H
+1073 0872 211409               LXI      H,REGS
+1074 0875 4F                   MOV      C,A
+1075 0876 0600                 MVI      B,0
+1076 0878 09                   DAD      B
+1077 0879 7E                   MOV      A,M
+1078 087A E1                   POP      H
+1079 087B CD9402               CALL     OUTC
+1080 087E C39408               JMP      UD22
+1081 0881 1A         UD09      LDAX     D
+1082 0882 E638                 ANI      38H
+1083 0884 0F                   RRC
+1084 0885 0F                   RRC
+1085 0886 0F                   RRC
+1086 0887 E5                   PUSH     H
+1087 0888 211409               LXI      H,REGS
+1088 088B 4F                   MOV      C,A
+1089 088C 0600                 MVI      B,0
+1090 088E 09                   DAD      B
+1091 088F 7E                   MOV      A,M
+1092 0890 E1                   POP      H
+1093 0891 CD9402               CALL     OUTC
+1094 0894 3E20       UD22      MVI      A,' '
+1095 0896 CD9402               CALL     OUTC
+1096 0899 C1                   POP      B
+1097 089A 04                   INR      B
+1098 089B 3E03                 MVI      A,3
+1099 089D B8                   CMP      B
+1100 089E C2D807               JNZ      UD01
+1101 08A1 E1                   POP      H
+1102 08A2 C1                   POP      B
+         Page   20           File c:monitor4.asm
+
+1103 08A3 13                   INX      D
+1104 08A4 C9                   RET
+1105                 ;    SUBROUTINE UDW OUTPUTS A SPECIFIED STRING OF ASCII
+1106 08A5 C5         UDW       PUSH     B
+1107 08A6 E5                   PUSH     H
+1108 08A7 7E         UW01      MOV      A,M
+1109 08A8 CD9402               CALL     OUTC
+1110 08AB 23                   INX      H
+1111 08AC 0D                   DCR      C
+1112 08AD C2A708               JNZ      UW01
+1113 08B0 E1                   POP      H
+1114 08B1 C1                   POP      B
+1115 08B2 C9                   RET
+1116                 ;    TABLES FOR ASSEMBLER DISASSEMBLER
+1117 0900                      ORG      0900H
+1118 0900 42         PAIR      DB       'B'
+1119 0901 44                   DB       'D'
+1120 0902 48                   DB       'H'
+1121 0903 53                   DB       'S'
+1122 0904 4E         CCOD      DB       'N'
+1123 0905 5A                   DB       'Z'
+1124 0906 5A                   DB       'Z'
+1125 0907 20                   DB       ' '
+1126 0908 4E                   DB       'N'
+1127 0909 43                   DB       'C'
+1128 090A 43                   DB       'C'
+1129 090B 20                   DB       ' '
+1130 090C 50                   DB       'P'
+1131 090D 4F                   DB       'O'
+1132 090E 50                   DB       'P'
+1133 090F 45                   DB       'E'
+1134 0910 50                   DB       'P'
+1135 0911 20                   DB       ' '
+1136 0912 4D                   DB       'M'
+1137 0913 20                   DB       ' '
+1138 0914 42         REGS      DB       'B'
+1139 0915 43                   DB       'C'
+1140 0916 44                   DB       'D'
+1141 0917 45                   DB       'E'
+1142 0918 48                   DB       'H'
+1143 0919 4C                   DB       'L'
+1144 091A 4D                   DB       'M'
+1145 091B 41                   DB       'A'
+1146 091C 40         INST      DB       40H
+1147 091D 03                   DB       3
+1148 091E 4D                   DB       'M'
+1149 091F 4F                   DB       'O'
+1150 0920 56                   DB       'V'
+1151 0921 76                   DB       76H
+1152 0922 EB                   DB       0EBH
+1153 0923 04                   DB       4
+1154 0924 58                   DB       'X'
+1155 0925 43                   DB       'C'
+1156 0926 48                   DB       'H'
+1157 0927 47                   DB       'G'
+1158 0928 00                   DB       0
+1159 0929 06                   DB       06H
+1160 092A 03                   DB       3
+         Page   21           File c:monitor4.asm
+
+1161 092B 4D                   DB       'M'
+1162 092C 56                   DB       'V'
+1163 092D 49                   DB       'I'
+1164 092E 74                   DB       74H
+1165 092F 01                   DB       01H
+1166 0930 03                   DB       3
+1167 0931 4C                   DB       'L'
+1168 0932 58                   DB       'X'
+1169 0933 49                   DB       'I'
+1170 0934 15                   DB       15H
+1171 0935 3A                   DB       3AH
+1172 0936 03                   DB       3
+1173 0937 4C                   DB       'L'
+1174 0938 44                   DB       'D'
+1175 0939 41                   DB       'A'
+1176 093A 50                   DB       50H
+1177 093B 2A                   DB       2AH
+1178 093C 04                   DB       4
+1179 093D 4C                   DB       'L'
+1180 093E 48                   DB       'H'
+1181 093F 4C                   DB       'L'
+1182 0940 44                   DB       'D'
+1183 0941 50                   DB       50H
+1184 0942 1A                   DB       1AH
+1185 0943 06                   DB       6
+1186 0944 4C                   DB       'L'
+1187 0945 44                   DB       'D'
+1188 0946 41                   DB       'A'
+1189 0947 58                   DB       'X'
+1190 0948 20                   DB       ' '
+1191 0949 44                   DB       'D'
+1192 094A 00                   DB       0
+1193 094B 0A                   DB       0AH
+1194 094C 06                   DB       6
+1195 094D 4C                   DB       'L'
+1196 094E 44                   DB       'D'
+1197 094F 41                   DB       'A'
+1198 0950 58                   DB       'X'
+1199 0951 20                   DB       ' '
+1200 0952 42                   DB       'B'
+1201 0953 00                   DB       0
+1202 0954 32                   DB       32H
+1203 0955 03                   DB       3
+1204 0956 53                   DB       'S'
+1205 0957 54                   DB       'T'
+1206 0958 41                   DB       'A'
+1207 0959 50                   DB       50H
+1208 095A 22                   DB       22H
+1209 095B 04                   DB       4
+1210 095C 53                   DB       'S'
+1211 095D 48                   DB       'H'
+1212 095E 4C                   DB       'L'
+1213 095F 44                   DB       'D'
+1214 0960 50                   DB       50H
+1215 0961 12                   DB       12H
+1216 0962 06                   DB       6
+1217 0963 53                   DB       'S'
+1218 0964 54                   DB       'T'
+         Page   22           File c:monitor4.asm
+
+1219 0965 41                   DB       'A'
+1220 0966 58                   DB       'X'
+1221 0967 20                   DB       ' '
+1222 0968 44                   DB       'D'
+1223 0969 00                   DB       0
+1224 096A 02                   DB       02H
+1225 096B 06                   DB       6
+1226 096C 53                   DB       'S'
+1227 096D 54                   DB       'T'
+1228 096E 41                   DB       'A'
+1229 096F 58                   DB       'X'
+1230 0970 20                   DB       ' '
+1231 0971 42                   DB       'B'
+1232 0972 00                   DB       0
+1233 0973 80                   DB       80H
+1234 0974 03                   DB       3
+1235 0975 41                   DB       'A'
+1236 0976 44                   DB       'D'
+1237 0977 44                   DB       'D'
+1238 0978 60                   DB       60H
+1239 0979 C6                   DB       0C6H
+1240 097A 03                   DB       3
+1241 097B 41                   DB       'A'
+1242 097C 44                   DB       'D'
+1243 097D 49                   DB       'I'
+1244 097E 40                   DB       40H
+1245 097F 88                   DB       88H
+1246 0980 03                   DB       3
+1247 0981 41                   DB       'A'
+1248 0982 44                   DB       'D'
+1249 0983 43                   DB       'C'
+1250 0984 60                   DB       60H
+1251 0985 CE                   DB       0CEH
+1252 0986 03                   DB       3
+1253 0987 41                   DB       'A'
+1254 0988 43                   DB       'C'
+1255 0989 49                   DB       'I'
+1256 098A 40                   DB       40H
+1257 098B 90                   DB       90H
+1258 098C 03                   DB       3
+1259 098D 53                   DB       'S'
+1260 098E 55                   DB       'U'
+1261 098F 42                   DB       'B'
+1262 0990 60                   DB       60H
+1263 0991 D6                   DB       0D6H
+1264 0992 03                   DB       3
+1265 0993 53                   DB       'S'
+1266 0994 55                   DB       'U'
+1267 0995 49                   DB       'I'
+1268 0996 40                   DB       40H
+1269 0997 98                   DB       98H
+1270 0998 03                   DB       3
+1271 0999 53                   DB       'S'
+1272 099A 42                   DB       'B'
+1273 099B 42                   DB       'B'
+1274 099C 60                   DB       60H
+1275 099D DE                   DB       0DEH
+1276 099E 03                   DB       3
+         Page   23           File c:monitor4.asm
+
+1277 099F 53                   DB       'S'
+1278 09A0 42                   DB       'B'
+1279 09A1 49                   DB       'I'
+1280 09A2 40                   DB       40H
+1281 09A3 04                   DB       04H
+1282 09A4 03                   DB       3
+1283 09A5 49                   DB       'I'
+1284 09A6 4E                   DB       'N'
+1285 09A7 52                   DB       'R'
+1286 09A8 70                   DB       70H
+1287 09A9 03                   DB       03H
+1288 09AA 03                   DB       3
+1289 09AB 49                   DB       'I'
+1290 09AC 4E                   DB       'N'
+1291 09AD 58                   DB       'X'
+1292 09AE 10                   DB       10H
+1293 09AF 05                   DB       05H
+1294 09B0 03                   DB       3
+1295 09B1 44                   DB       'D'
+1296 09B2 43                   DB       'C'
+1297 09B3 52                   DB       'R'
+1298 09B4 70                   DB       70H
+1299 09B5 0B                   DB       0BH
+1300 09B6 03                   DB       3
+1301 09B7 44                   DB       'D'
+1302 09B8 43                   DB       'C'
+1303 09B9 58                   DB       'X'
+1304 09BA 10                   DB       10H
+1305 09BB 09                   DB       09H
+1306 09BC 03                   DB       3
+1307 09BD 44                   DB       'D'
+1308 09BE 41                   DB       'A'
+1309 09BF 44                   DB       'D'
+1310 09C0 10                   DB       10H
+1311 09C1 27                   DB       27H
+1312 09C2 03                   DB       3
+1313 09C3 44                   DB       'D'
+1314 09C4 41                   DB       'A'
+1315 09C5 41                   DB       'A'
+1316 09C6 00                   DB       0
+1317 09C7 A0                   DB       0A0H
+1318 09C8 03                   DB       3
+1319 09C9 41                   DB       'A'
+1320 09CA 4E                   DB       'N'
+1321 09CB 41                   DB       'A'
+1322 09CC 60                   DB       60H
+1323 09CD E6                   DB       0E6H
+1324 09CE 03                   DB       3
+1325 09CF 41                   DB       'A'
+1326 09D0 4E                   DB       'N'
+1327 09D1 49                   DB       'I'
+1328 09D2 40                   DB       40H
+1329 09D3 A8                   DB       0A8H
+1330 09D4 03                   DB       3
+1331 09D5 58                   DB       'X'
+1332 09D6 52                   DB       'R'
+1333 09D7 41                   DB       'A'
+1334 09D8 60                   DB       60H
+         Page   24           File c:monitor4.asm
+
+1335 09D9 EE                   DB       0EEH
+1336 09DA 03                   DB       3
+1337 09DB 58                   DB       'X'
+1338 09DC 52                   DB       'R'
+1339 09DD 49                   DB       'I'
+1340 09DE 40                   DB       40H
+1341 09DF B0                   DB       0B0H
+1342 09E0 03                   DB       3
+1343 09E1 4F                   DB       'O'
+1344 09E2 52                   DB       'R'
+1345 09E3 41                   DB       'A'
+1346 09E4 60                   DB       60H
+1347 09E5 F6                   DB       0F6H
+1348 09E6 03                   DB       3
+1349 09E7 4F                   DB       'O'
+1350 09E8 52                   DB       'R'
+1351 09E9 49                   DB       'I'
+1352 09EA 40                   DB       40H
+1353 09EB B8                   DB       0B8H
+1354 09EC 03                   DB       3
+1355 09ED 43                   DB       'C'
+1356 09EE 4D                   DB       'M'
+1357 09EF 50                   DB       'P'
+1358 09F0 60                   DB       60H
+1359 09F1 FE                   DB       0FEH
+1360 09F2 03                   DB       3
+1361 09F3 43                   DB       'C'
+1362 09F4 50                   DB       'P'
+1363 09F5 49                   DB       'I'
+1364 09F6 40                   DB       40H
+1365 09F7 07                   DB       07H
+1366 09F8 03                   DB       3
+1367 09F9 52                   DB       'R'
+1368 09FA 4C                   DB       'L'
+1369 09FB 43                   DB       'C'
+1370 09FC 00                   DB       0
+1371 09FD 0F                   DB       0FH
+1372 09FE 03                   DB       3
+1373 09FF 52                   DB       'R'
+1374 0A00 52                   DB       'R'
+1375 0A01 43                   DB       'C'
+1376 0A02 00                   DB       0
+1377 0A03 17                   DB       17H
+1378 0A04 03                   DB       3
+1379 0A05 52                   DB       'R'
+1380 0A06 41                   DB       'A'
+1381 0A07 4C                   DB       'L'
+1382 0A08 00                   DB       0
+1383 0A09 1F                   DB       1FH
+1384 0A0A 03                   DB       3
+1385 0A0B 52                   DB       'R'
+1386 0A0C 41                   DB       'A'
+1387 0A0D 52                   DB       'R'
+1388 0A0E 00                   DB       0
+1389 0A0F 2F                   DB       2FH
+1390 0A10 03                   DB       3
+1391 0A11 43                   DB       'C'
+1392 0A12 4D                   DB       'M'
+         Page   25           File c:monitor4.asm
+
+1393 0A13 41                   DB       'A'
+1394 0A14 00                   DB       0
+1395 0A15 3F                   DB       3FH
+1396 0A16 03                   DB       3
+1397 0A17 43                   DB       'C'
+1398 0A18 4D                   DB       'M'
+1399 0A19 43                   DB       'C'
+1400 0A1A 00                   DB       0
+1401 0A1B 37                   DB       37H
+1402 0A1C 03                   DB       3
+1403 0A1D 53                   DB       'S'
+1404 0A1E 54                   DB       'T'
+1405 0A1F 43                   DB       'C'
+1406 0A20 00                   DB       0
+1407 0A21 C3                   DB       0C3H
+1408 0A22 03                   DB       3
+1409 0A23 4A                   DB       'J'
+1410 0A24 4D                   DB       'M'
+1411 0A25 50                   DB       'P'
+1412 0A26 50                   DB       50H
+1413 0A27 C2                   DB       0C2H
+1414 0A28 01                   DB       1
+1415 0A29 4A                   DB       'J'
+1416 0A2A 25                   DB       25H
+1417 0A2B CD                   DB       0CDH
+1418 0A2C 04                   DB       4
+1419 0A2D 43                   DB       'C'
+1420 0A2E 41                   DB       'A'
+1421 0A2F 4C                   DB       'L'
+1422 0A30 4C                   DB       'L'
+1423 0A31 50                   DB       50H
+1424 0A32 C4                   DB       0C4H
+1425 0A33 01                   DB       1
+1426 0A34 43                   DB       'C'
+1427 0A35 25                   DB       25H
+1428 0A36 C9                   DB       0C9H
+1429 0A37 03                   DB       3
+1430 0A38 52                   DB       'R'
+1431 0A39 45                   DB       'E'
+1432 0A3A 54                   DB       'T'
+1433 0A3B 00                   DB       0
+1434 0A3C C0                   DB       0C0H
+1435 0A3D 01                   DB       1
+1436 0A3E 52                   DB       'R'
+1437 0A3F 20                   DB       20H
+1438 0A40 C7                   DB       0C7H
+1439 0A41 03                   DB       3
+1440 0A42 52                   DB       'R'
+1441 0A43 53                   DB       'S'
+1442 0A44 54                   DB       'T'
+1443 0A45 30                   DB       30H
+1444 0A46 E9                   DB       0E9H
+1445 0A47 04                   DB       4
+1446 0A48 50                   DB       'P'
+1447 0A49 43                   DB       'C'
+1448 0A4A 48                   DB       'H'
+1449 0A4B 4C                   DB       'L'
+1450 0A4C 00                   DB       0
+         Page   26           File c:monitor4.asm
+
+1451 0A4D C5                   DB       0C5H
+1452 0A4E 04                   DB       4
+1453 0A4F 50                   DB       'P'
+1454 0A50 55                   DB       'U'
+1455 0A51 53                   DB       'S'
+1456 0A52 48                   DB       'H'
+1457 0A53 10                   DB       10H
+1458 0A54 F5                   DB       0F5H
+1459 0A55 08                   DB       8
+1460 0A56 50                   DB       'P'
+1461 0A57 55                   DB       'U'
+1462 0A58 53                   DB       'S'
+1463 0A59 48                   DB       'H'
+1464 0A5A 20                   DB       ' '
+1465 0A5B 50                   DB       'P'
+1466 0A5C 53                   DB       'S'
+1467 0A5D 57                   DB       'W'
+1468 0A5E 00                   DB       0
+1469 0A5F C1                   DB       0C1H
+1470 0A60 03                   DB       3
+1471 0A61 50                   DB       'P'
+1472 0A62 4F                   DB       'O'
+1473 0A63 50                   DB       'P'
+1474 0A64 10                   DB       10H
+1475 0A65 F1                   DB       0F1H
+1476 0A66 07                   DB       7
+1477 0A67 50                   DB       'P'
+1478 0A68 4F                   DB       'O'
+1479 0A69 50                   DB       'P'
+1480 0A6A 20                   DB       ' '
+1481 0A6B 50                   DB       'P'
+1482 0A6C 53                   DB       'S'
+1483 0A6D 57                   DB       'W'
+1484 0A6E 00                   DB       0
+1485 0A6F E3                   DB       0E3H
+1486 0A70 04                   DB       4
+1487 0A71 58                   DB       'X'
+1488 0A72 54                   DB       'T'
+1489 0A73 48                   DB       'H'
+1490 0A74 4C                   DB       'L'
+1491 0A75 00                   DB       0
+1492 0A76 F9                   DB       0F9H
+1493 0A77 04                   DB       4
+1494 0A78 53                   DB       'S'
+1495 0A79 50                   DB       'P'
+1496 0A7A 48                   DB       'H'
+1497 0A7B 4C                   DB       'L'
+1498 0A7C 00                   DB       0
+1499 0A7D DB                   DB       0DBH
+1500 0A7E 02                   DB       2
+1501 0A7F 49                   DB       'I'
+1502 0A80 4E                   DB       'N'
+1503 0A81 40                   DB       40H
+1504 0A82 D3                   DB       0D3H
+1505 0A83 03                   DB       3
+1506 0A84 4F                   DB       'O'
+1507 0A85 55                   DB       'U'
+1508 0A86 54                   DB       'T'
+         Page   27           File c:monitor4.asm
+
+1509 0A87 40                   DB       40H
+1510 0A88 FB                   DB       0FBH
+1511 0A89 02                   DB       2
+1512 0A8A 45                   DB       'E'
+1513 0A8B 49                   DB       'I'
+1514 0A8C 00                   DB       0
+1515 0A8D F3                   DB       0F3H
+1516 0A8E 02                   DB       2
+1517 0A8F 44                   DB       'D'
+1518 0A90 49                   DB       'I'
+1519 0A91 00                   DB       0
+1520 0A92 76                   DB       76H
+1521 0A93 03                   DB       3
+1522 0A94 48                   DB       'H'
+1523 0A95 4C                   DB       'L'
+1524 0A96 54                   DB       'T'
+1525 0A97 00                   DB       0
+1526 0A98 00                   DB       0
+1527 0A99 03                   DB       3
+1528 0A9A 4E                   DB       'N'
+1529 0A9B 4F                   DB       'O'
+1530 0A9C 50                   DB       'P'
+1531 0A9D 00                   DB       0
+1532 0A9E 20                   DB       20H
+1533 0A9F 03                   DB       3
+1534 0AA0 52                   DB       'R'
+1535 0AA1 49                   DB       'I'
+1536 0AA2 4D                   DB       'M'
+1537 0AA3 00                   DB       0
+1538 0AA4 30                   DB       30H
+1539 0AA5 03                   DB       3
+1540 0AA6 53                   DB       'S'
+1541 0AA7 49                   DB       'I'
+1542 0AA8 4D                   DB       'M'
+1543 0AA9 00                   DB       0
+1544 0AAA 00         TEND      DB       0
+1545 0B00                      ORG      0B00H
+1546                 ;
+1547                 ;    C code Run time routines
+1548                 ;    fetch char from (HL) and sign extend into HL
+1549 0B00 7E         ?gchar    mov      a,m
+1550 0B01 6F         ?sxt      mov      l,a
+1551 0B02 07                   rlc
+1552 0B03 9F                   sbb      a
+1553 0B04 67                   mov      h,a
+1554 0B05 C9                   ret
+1555                 ; fetch int from (HL)
+1556 0B06 7E         ?gint     mov      a,m
+1557 0B07 23                   inx      h
+1558 0B08 66                   mov      h,m
+1559 0B09 6F                   mov      l,a
+1560 0B0A C9                   ret
+1561                 ; store char from HL into (DE)
+1562 0B0B 7D         ?pchar    mov      a,l
+1563 0B0C 12                   stax     d
+1564 0B0D C9                   ret
+1565                 ; store int from HL into (DE)
+1566 0B0E 7D         ?pint     mov      a,l
+         Page   28           File c:monitor4.asm
+
+1567 0B0F 12                   stax     d
+1568 0B10 13                   inx      d
+1569 0B11 7C                   mov      a,h
+1570 0B12 12                   stax     d
+1571 0B13 C9                   ret
+1572                 ; "or" HL and DE into HL
+1573 0B14 7D         ?or       mov      a,l
+1574 0B15 B3                   ora      e
+1575 0B16 6F                   mov      l,a
+1576 0B17 7C                   mov      a,h
+1577 0B18 B2                   ora      d
+1578 0B19 67                   mov      h,a
+1579 0B1A C9                   ret
+1580                 ;   "xor" HL and DE into HL
+1581 0B1B 7D         ?xor      mov      a,l
+1582 0B1C AB                   xra      e
+1583 0B1D 6F                   mov      l,a
+1584 0B1E 7C                   mov      a,h
+1585 0B1F AA                   xra      d
+1586 0B20 67                   mov      h,a
+1587 0B21 C9                   ret
+1588                 ;   "and" HL and DE into HL
+1589 0B22 7D         ?and      mov      a,l
+1590 0B23 A3                   ana      e
+1591 0B24 6F                   mov      l,a
+1592 0B25 7C                   mov      a,h
+1593 0B26 A2                   ana      d
+1594 0B27 67                   mov      h,a
+1595 0B28 C9                   ret
+1596                 ;
+1597                 ;......logical operations: HL set to 0 (false) or 1 (true)
+1598                 ; DE == HL
+1599 0B29 CD690B     ?eq       call     ?cmpx
+1600 0B2C C8                   rz
+1601 0B2D 2B                   dcx      h
+1602 0B2E C9                   ret
+1603                 ; DE != HL
+1604 0B2F CD690B     ?ne       call     ?cmpx
+1605 0B32 C0                   rnz
+1606 0B33 2B                   dcx      h
+1607 0B34 C9                   ret
+1608                 ; DE > HL [signed]
+1609 0B35 EB         ?gt       xchg
+1610 0B36 CD690B               call     ?cmpx
+1611 0B39 D8                   rc
+1612 0B3A 2B                   dcx      h
+1613 0B3B C9                   ret
+1614                 ; DE <= HL [signed]
+1615 0B3C CD690B     ?le       call     ?cmpx
+1616 0B3F C8                   rz
+1617 0B40 D8                   rc
+1618 0B41 2B                   dcx      h
+1619 0B42 C9                   ret
+1620                 ; DE >= HL [signed]
+1621 0B43 CD690B     ?ge       call     ?cmpx
+1622 0B46 D0                   rnc
+1623 0B47 2B                   dcx      h
+1624 0B48 C9                   ret
+         Page   29           File c:monitor4.asm
+
+1625                 ; DE < HL [signed]
+1626 0B49 CD690B     ?lt       call     ?cmpx
+1627 0B4C D8                   rc
+1628 0B4D 2B                   dcx      h
+1629 0B4E C9                   ret
+1630                 ; DE >= HL [unsigned]
+1631 0B4F CD790B     ?uge      call     ?ucmp
+1632 0B52 D0                   rnc
+1633 0B53 2B                   dcx      h
+1634 0B54 C9                   ret
+1635                 ; DE < HL [unsigned]
+1636 0B55 CD790B     ?ult      call     ?ucmp
+1637 0B58 D8                   rc
+1638 0B59 2B                   dcx      h
+1639 0B5A C9                   ret
+1640                 ; DE > HL [unsigned]
+1641 0B5B EB         ?ugt      xchg
+1642 0B5C CD790B               call     ?ucmp
+1643 0B5F D8                   rc
+1644 0B60 2B                   dcx      h
+1645 0B61 C9                   ret
+1646                 ;   DE <= HL [unsigned]
+1647 0B62 CD790B     ?ule      call     ?ucmp
+1648 0B65 C8                   rz
+1649 0B66 D8                   rc
+1650 0B67 2B                   dcx      h
+1651 0B68 C9                   ret
+1652                 ;   signed compare of DE and HL
+1653                 ;   carry is sign of difference [set => DE < HL]
+1654                 ;   zero is zero/non-zero
+1655 0B69 7B         ?cmpx     mov      a,e
+1656 0B6A 95                   sub      l
+1657 0B6B 5F                   mov      e,a
+1658 0B6C 7A                   mov      a,d
+1659 0B6D 9C                   sbb      h
+1660 0B6E 210100               lxi      h,1       ;preset true
+1661 0B71 FA760B               jm       cmp1
+1662 0B74 B3                   ora      e         ;resets carry
+1663 0B75 C9                   ret
+1664 0B76 B3         cmp1      ora      e
+1665 0B77 37                   stc
+1666 0B78 C9                   ret
+1667                 ; unsigned compare of DE and HL
+1668                 ;   carry is sign of difference [set => DE < HL]
+1669                 ;   zero is zero/non-zero
+1670 0B79 7A         ?ucmp     mov      a,d
+1671 0B7A BC                   cmp      h
+1672 0B7B C2800B               jnz      ucmp1
+1673 0B7E 7B                   mov      a,e
+1674 0B7F BD                   cmp      l
+1675 0B80 210100     ucmp1     lxi      h,1       ;preset true
+1676 0B83 C9                   ret
+1677                 ; shift DE right arithmetically by HL, move to HL
+1678 0B84 EB         ?asr      xchg
+1679 0B85 1D         asr1      dcr      e
+1680 0B86 F8                   rm
+1681 0B87 7C                   mov      a,h
+1682 0B88 17                   ral
+         Page   30           File c:monitor4.asm
+
+1683 0B89 7C                   mov      a,h
+1684 0B8A 1F                   rar
+1685 0B8B 67                   mov      h,a
+1686 0B8C 7D                   mov      a,l
+1687 0B8D 1F                   rar
+1688 0B8E 6F                   mov      l,a
+1689 0B8F C3850B               jmp      asr1
+1690                 ; shift DE left arithmetically by HL, move to HL
+1691 0B92 EB         ?asl      xchg
+1692 0B93 1D         asl1      dcr      e
+1693 0B94 F8                   rm
+1694 0B95 29                   dad      h
+1695 0B96 C3930B               jmp      asl1
+1696                 ; HL = DE - HL
+1697 0B99 7B         ?sub      mov      a,e
+1698 0B9A 95                   sub      l
+1699 0B9B 6F                   mov      l,a
+1700 0B9C 7A                   mov      a,d
+1701 0B9D 9C                   sbb      h
+1702 0B9E 67                   mov      h,a
+1703 0B9F C9                   ret
+1704                 ; HL = -HL
+1705 0BA0 CDA50B     ?neg      call     ?com
+1706 0BA3 23                   inx      h
+1707 0BA4 C9                   ret
+1708                 ; HL = ~HL
+1709 0BA5 7C         ?com      mov      a,h
+1710 0BA6 2F                   cma
+1711 0BA7 67                   mov      h,a
+1712 0BA8 7D                   mov      a,l
+1713 0BA9 2F                   cma
+1714 0BAA 6F                   mov      l,a
+1715 0BAB C9                   ret
+1716                 ; HL = !HL
+1717 0BAC 7C         ?lneg     mov      a,h
+1718 0BAD B5                   ora      l
+1719 0BAE CAB50B               jz       lneg1
+1720 0BB1 210000               lxi      h,0
+1721 0BB4 C9                   ret
+1722 0BB5 23         lneg1     inx      h
+1723 0BB6 C9                   ret
+1724                 ;
+1725                 ;    HL = !!HL
+1726 0BB7 CDAC0B     ?bool     call     ?lneg
+1727 0BBA C3AC0B               jmp      ?lneg
+1728                 ;
+1729                 ;    HL = DE * HL [signed]
+1730 0BBD 44         ?mul      mov      b,h
+1731 0BBE 4D                   mov      c,l
+1732 0BBF 210000               lxi      h,0
+1733 0BC2 79         mul1      mov      a,c
+1734 0BC3 0F                   rrc
+1735 0BC4 D2C80B               jnc      mul2
+1736 0BC7 19                   dad      d
+1737 0BC8 AF         mul2      xra      a
+1738 0BC9 78                   mov      a,b
+1739 0BCA 1F                   rar
+1740 0BCB 47                   mov      b,a
+         Page   31           File c:monitor4.asm
+
+1741 0BCC 79                   mov      a,c
+1742 0BCD 1F                   rar
+1743 0BCE 4F                   mov      c,a
+1744 0BCF B0                   ora      b
+1745 0BD0 C8                   rz
+1746 0BD1 AF                   xra      a
+1747 0BD2 7B                   mov      a,e
+1748 0BD3 17                   ral
+1749 0BD4 5F                   mov      e,a
+1750 0BD5 7A                   mov      a,d
+1751 0BD6 17                   ral
+1752 0BD7 57                   mov      d,a
+1753 0BD8 B3                   ora      e
+1754 0BD9 C8                   rz
+1755 0BDA C3C20B               jmp      mul1
+1756                 ;
+1757                 ;    HL = DE / HL, DE = DE % HL
+1758 0BDD 44         ?div      mov      b,h
+1759 0BDE 4D                   mov      c,l
+1760 0BDF 7A                   mov      a,d
+1761 0BE0 A8                   xra      b
+1762 0BE1 F5                   push     psw
+1763 0BE2 7A                   mov      a,d
+1764 0BE3 B7                   ora      a
+1765 0BE4 FC1E0C               cm       ?deneg
+1766 0BE7 78                   mov      a,b
+1767 0BE8 B7                   ora      a
+1768 0BE9 FC260C               cm       ?bcneg
+1769 0BEC 3E10                 mvi      a,16
+1770 0BEE F5                   push     psw
+1771 0BEF EB                   xchg
+1772 0BF0 110000               lxi      d,0
+1773 0BF3 29         div1      dad      h
+1774 0BF4 CD2E0C               call     ?rdel
+1775 0BF7 CA0A0C               jz       div2
+1776 0BFA CD360C               call     ?cmpbd
+1777 0BFD FA0A0C               jm       div2
+1778 0C00 7D                   mov      a,l
+1779 0C01 F601                 ori      1
+1780 0C03 6F                   mov      l,a
+1781 0C04 7B                   mov      a,e
+1782 0C05 91                   sub      c
+1783 0C06 5F                   mov      e,a
+1784 0C07 7A                   mov      a,d
+1785 0C08 98                   sbb      b
+1786 0C09 57                   mov      d,a
+1787 0C0A F1         div2      pop      psw
+1788 0C0B 3D                   dcr      a
+1789 0C0C CA130C               jz       div3
+1790 0C0F F5                   push     psw
+1791 0C10 C3F30B               jmp      div1
+1792 0C13 F1         div3      pop      psw
+1793 0C14 F0                   rp
+1794 0C15 CD1E0C               call     ?deneg
+1795 0C18 EB                   xchg
+1796 0C19 CD1E0C               call     ?deneg
+1797 0C1C EB                   xchg
+1798 0C1D C9                   ret
+         Page   32           File c:monitor4.asm
+
+1799                 ;
+1800                 ;    {DE = -DE}
+1801 0C1E 7A         ?deneg    mov      a,d
+1802 0C1F 2F                   cma
+1803 0C20 57                   mov      d,a
+1804 0C21 7B                   mov      a,e
+1805 0C22 2F                   cma
+1806 0C23 5F                   mov      e,a
+1807 0C24 13                   inx      d
+1808 0C25 C9                   ret
+1809                 ;
+1810                 ;    {BC = -BC}
+1811 0C26 78         ?bcneg    mov      a,b
+1812 0C27 2F                   cma
+1813 0C28 47                   mov      b,a
+1814 0C29 79                   mov      a,c
+1815 0C2A 2F                   cma
+1816 0C2B 4F                   mov      c,a
+1817 0C2C 03                   inx      b
+1818 0C2D C9                   ret
+1819                 ;
+1820                 ;    {DE <r<r 1}
+1821 0C2E 7B         ?rdel     mov      a,e
+1822 0C2F 17                   ral
+1823 0C30 5F                   mov      e,a
+1824 0C31 7A                   mov      a,d
+1825 0C32 17                   ral
+1826 0C33 57                   mov      d,a
+1827 0C34 B3                   ora      e
+1828 0C35 C9                   ret
+1829                 ;
+1830                 ;   {BC : DE}
+1831 0C36 7B         ?cmpbd    mov      a,e
+1832 0C37 91                   sub      c
+1833 0C38 7A                   mov      a,d
+1834 0C39 98                   sbb      b
+1835 0C3A C9                   ret
+1836                 ;
+1837                 ;   case jump
+1838 0C3B EB         ?case     xchg               ;switch value to DE
+1839 0C3C E1                   pop      h         ;get table address
+1840 0C3D CD600C     case1     call     case4     ;get case value
+1841 0C40 7B                   mov      a,e
+1842 0C41 B9                   cmp      c         ;equal to switch value
+1843 0C42 C2520C               jnz      case2     ;no
+1844 0C45 7A                   mov      a,d
+1845 0C46 B8                   cmp      b         ;equal to switch value
+1846 0C47 C2520C               jnz      case2     ;no
+1847 0C4A CD600C               call     case4     ;get case label
+1848 0C4D CA580C               jz       case3     ;end of table, go to default
+1849 0C50 C5                   push     b
+1850 0C51 C9                   ret                ;case jump
+1851 0C52 CD600C     case2     call     case4     ;get case label
+1852 0C55 C23D0C               jnz      case1     ;next case
+1853 0C58 2B         case3     dcx      h
+1854 0C59 2B                   dcx      h
+1855 0C5A 2B                   dcx      h
+1856 0C5B 56                   mov      d,m
+         Page   33           File c:monitor4.asm
+
+1857 0C5C 2B                   dcx      h
+1858 0C5D 5E                   mov      e,m
+1859 0C5E EB                   xchg
+1860 0C5F E9                   pchl               ;default jump
+1861 0C60 4E         case4     mov      c,m
+1862 0C61 23                   inx      h
+1863 0C62 46                   mov      b,m
+1864 0C63 23                   inx      h
+1865 0C64 79                   mov      a,c
+1866 0C65 B0                   ora      b
+1867 0C66 C9                   ret
+1868                 ;
+1869 0C67 210000     Xstktop   lxi      h,0       ;return current stack pointer
+1870 0C6A 39                   dad      sp
+1871 0C6B C9                   ret
+1872                 ;
+1873                 ;	Run time start off for Small C.
+1874 0F00                      ORG      0F00H
+1875 0F00 F9                   sphl               ; save the stack pointer
+1876 0F01 223237               shld     stksav
+1877 0F04 2A0600               lhld     6         ; pick up core top
+1878 0F07 11F6FF               lxi      d,-10     ; decrease by 10 for safety
+1879 0F0A 19                   dad      d
+1880 0F0B F9                   sphl               ; set stack pointer
+1881 0F0C CD3437               call     stdioinit ; initialize stdio
+1882 0F0F CD3637               call     Xarglist
+1883 0F12 2A3837               lhld     Xargc
+1884 0F15 E5                   push     h
+1885 0F16 213A37               lxi      h,Xargv
+1886 0F19 E5                   push     h
+1887 0F1A CD3C37               call     main      ; call main program
+1888 0F1D D1                   pop      d
+1889 0F1E D1                   pop      d
+1890 0F1F 2A3237               lhld     stksav    ; restore stack pointer
+1891 0F22 C9                   ret                ; go back to CCP
+1892                 ;
+1893                 ;    HIGH MEMORY VARIABLES
+1894 3700                      ORG      3700H
+1895 3700            SLI1      DS       2
+1896 3702            SLI2      DS       2
+1897 3704            SLI3      DS       2
+1898 3706            SLI4      DS       2
+1899 3708            SL45      DS       2
+1900 370A            SLI5      DS       2
+1901 370C            SL55      DS       2
+1902 370E            SLI6      DS       2
+1903 3710            SL65      DS       2
+1904 3712            SLI7      DS       2
+1905 3714            SL75      DS       2
+1906 3716            FULL      DS       2
+1907 3718            HALF      DS       2
+1908 371A            TBC       DS       2
+1909 371C            CRC       DS       1
+1910 371D            SBC       DS       1
+1911 371E            SADE      DS       1
+1912 371F            SADF      DS       1
+1913 3720            CD        DS       16
+1914 3730            etext     EQU      *
+         Page   34           File c:monitor4.asm
+
+1915 3730 3237       brkend    DW       edata     ;current "break"
+1916 3732            edata     EQU      *
+1917                 ;
+1918 3732            stksav    DS       2
+1919 3734            stdioini  DS       2
+1920 3736            Xarglist  DS       2
+1921 3738            Xargc     DS       2
+1922 373A            Xargv     DS       2
+1923 373C            main      DS       2
+1924 373E                      END
+
